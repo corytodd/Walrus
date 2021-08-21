@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Walrus.CLI": {
+      "commandName": "Project",
+      "commandLineArgs": "show repos"
+    }
+  }
+}

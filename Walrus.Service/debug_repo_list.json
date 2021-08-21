@@ -1,0 +1,9 @@
+{
+  "include": [
+    "project_a",
+    "project_b"
+  ],
+  "exclude": [
+    "ignore_me"
+  ]
+}
