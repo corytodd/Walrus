@@ -44,8 +44,14 @@
 
             if (query.AllBranches)
             {
+
                 foreach (var branch in _repository.Branches)
                 {
+                    if (branch.IsRemote)
+                    {
+                        continue;
+                    }
+
                     iterators.Add(branch.Commits.GetEnumerator());
                 }
             }
