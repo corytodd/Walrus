@@ -20,11 +20,14 @@
         }
 
         /// <summary>
+        /// Name of folder containing Git repo
+        /// </summary>
+        public string? RepositoryName => Path.GetFileName(RepositoryPath);
+
+        /// <summary>
         /// Absolute path to Git repo
         /// </summary>
         public string? RepositoryPath => Path.GetDirectoryName(_repository?.Info?.WorkingDirectory);
-
-
 
         /// <summary>
         /// Most recent commit message
@@ -93,14 +96,14 @@
                 }
                 catch (Exception ex)
                 {
-                    WalrusLog.Logger.LogError(ex, "Error enumerating commits on {Path}", RepositoryPath);
+                    WalrusLog.Logger.LogError(ex, "Error enumerating commits on {Path}", _repository.Info.WorkingDirectory);
                     break;
                 }
 
                 var commit = commitIter.Current;
                 if (IsMatch(commit, query))
                 {
-                    yield return new WalrusCommit(commit);
+                    yield return new WalrusCommit(RepositoryName!, commit);
                 }
             } while (true);
 
