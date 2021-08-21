@@ -59,6 +59,7 @@
 
             var commits = Walrus
                 .GetRepositories()
+                .AsParallel()
                 .Select(r => r.GetCommits(query))
                 .SelectMany(c => c)
                 .OrderBy(c => c.Timestamp);
