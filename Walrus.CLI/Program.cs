@@ -84,7 +84,10 @@
                 services.AddSingleton(commandType, command);
             }
 
-            return services.BuildServiceProvider();
+            var provider = services.BuildServiceProvider();
+            WalrusLog.LoggerFactory = provider.GetService<ILoggerFactory>();
+
+            return provider;
         }
     }
 }
