@@ -54,8 +54,6 @@
         /// <returns>List of matching commits</returns>
         public IEnumerable<WalrusCommit> GetCommitsInRangeAllBranches(DateTime start, DateTime end)
         {
-            WalrusLog.Logger.LogDebug("Querying commits from all branches, this may take a momeny");
-
             foreach (var branch in _repository.Branches)
             {
                 if (branch.IsRemote)
