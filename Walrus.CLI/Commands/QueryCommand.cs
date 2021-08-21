@@ -28,41 +28,44 @@
                 () => DateTime.Now.AddDays(1),
                 "Return commits before this date. Defaults to tomorrow."));
 
-            Command.Handler = CommandHandler.Create((QueryParams queryParams) =>
+            Command.AddOption(new Option(
+                "--all-branches",
+                "Include all *local* branches in search"
+                ));
+
+            Command.AddOption(new Option<string>(
+                "--author-email", 
+                "Return commits from this author"));
+
+            Command.Handler = CommandHandler.Create((WalrusQuery query) =>
             {
-                HandleQuery(queryParams);
+                HandleQuery(query);
             });
         }
 
+        /// <inheritdoc />
         public override string Name => "query";
 
+        /// <inheritdoc />
         public override string Description => "Query all git repositories";
 
-        private void HandleQuery(QueryParams queryParams)
+        /// <summary>
+        /// Execute Git query
+        /// </summary>
+        /// <param name="query">Query to execute</param>
+        private void HandleQuery(WalrusQuery query)
         {
-            _logger.LogDebug("HandleQuery: {queryParams}", queryParams);
+            _logger.LogDebug("HandleQuery: {query}", query);
 
             var commits = Walrus
                 .GetRepositories()
-                .Select(r => r.GetCommitsInRangeAllBranches(queryParams.After, queryParams.Before))
+                .Select(r => r.GetCommits(query))
                 .SelectMany(c => c)
                 .OrderBy(c => c.Timestamp);
 
             var count = commits.Count();
 
             Console.WriteLine("Found {0} commits", count);
-        }
-
-        private class QueryParams
-        {
-            public DateTime After { get; set; }
-
-            public DateTime Before { get; set; }
-
-            public override string ToString()
-            {
-                return $"After={After}, Before={Before}";
-            }
         }
     }
 }

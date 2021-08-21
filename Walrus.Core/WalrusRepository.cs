@@ -5,6 +5,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using Walrus.Core.Internal;
 
     /// <summary>
     /// TODO: do we want to wrap this type or use the raw LibGit2 type?
@@ -31,43 +32,39 @@
         public string? LastCommit => _repository.Head?.Tip?.Message;
 
         /// <summary>
-        /// Returns list of all commits in this repo in specified time range
+        /// Returns list of all commits in this repo that satisfy the query
         /// </summary>
-        /// <param name="start">Starting timestamp, inclusive</param>
-        /// <param name="end">ending timestamp, exclusive</param>
+        /// <param name="query">Commit query</param>
         /// <returns>List of matching commits</returns>
-        public IEnumerable<WalrusCommit> GetCommitsInRange(DateTime start, DateTime end)
+        public IEnumerable<WalrusCommit> GetCommits(WalrusQuery query)
         {
-            var commitIter = _repository.Commits.GetEnumerator();
-            foreach (var commit in SafeGitCommitEnumeration(commitIter, start, end))
-            {
-                yield return commit;
-            }
-        }
+            Ensure.IsNotNull(nameof(query), query);
 
+            var iterators = new List<IEnumerator<Commit>>(32);
 
-        /// <summary>
-        /// Returns list of all commits in this repo on all branches in specified time range
-        /// </summary>
-        /// <param name="start">Starting timestamp, inclusive</param>
-        /// <param name="end">ending timestamp, exclusive</param>
-        /// <returns>List of matching commits</returns>
-        public IEnumerable<WalrusCommit> GetCommitsInRangeAllBranches(DateTime start, DateTime end)
-        {
-            foreach (var branch in _repository.Branches)
+            if (query.AllBranches)
             {
-                if (branch.IsRemote)
+                foreach (var branch in _repository.Branches)
                 {
-                    continue;
+                    iterators.Add(branch.Commits.GetEnumerator());
                 }
+            }
+            else
+            {
+                iterators.Add(_repository.Commits.GetEnumerator());
+            }
 
-                var commitIter = branch.Commits.GetEnumerator();
-                foreach (var commit in SafeGitCommitEnumeration(commitIter, start, end))
+            foreach (var commitIter in iterators)
+            {
+
+                foreach (var commit in SafeGitCommitEnumeration(commitIter, query))
                 {
                     yield return commit;
                 }
             }
+
         }
+
 
         /// <summary>
         /// LibGit2Sharp Commits iterator seems a bit crashy so we'll manually iterate
@@ -76,7 +73,7 @@
         /// <param name="start">Return commits on or after this date</param>
         /// <param name="end">Return commit before this date</param>
         /// <returns>Commits that satisfy filter</returns>
-        private IEnumerable<WalrusCommit> SafeGitCommitEnumeration(IEnumerator<Commit> commitIter, DateTime start, DateTime end)
+        private IEnumerable<WalrusCommit> SafeGitCommitEnumeration(IEnumerator<Commit> commitIter, WalrusQuery query)
         {
             do
             {
@@ -95,7 +92,7 @@
                 }
 
                 var commit = commitIter.Current;
-                if (commit.Author.When >= start && commit.Author.When < end)
+                if (IsMatch(commit, query))
                 {
                     yield return new WalrusCommit(commit);
                 }
@@ -103,6 +100,22 @@
 
 
             yield break;
+        }
+
+        /// <summary>
+        /// Returns true if commit satisfies query
+        /// </summary>
+        /// <param name="commit">Commit to test</param>
+        /// <param name="query">Query parameters</param>
+        /// <returns>True if commit satisfies query</returns>
+        private bool IsMatch(Commit commit, WalrusQuery query)
+        {
+            if (string.IsNullOrEmpty(query.AuthorEmail))
+            {
+                return commit.Author.When >= query.After && commit.Author.When < query.Before;
+            }
+
+            return commit.Author.Email == query.AuthorEmail && commit.Author.When >= query.After && commit.Author.When < query.Before;
         }
     }
 }
