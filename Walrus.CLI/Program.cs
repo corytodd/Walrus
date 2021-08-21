@@ -1,17 +1,17 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using System;
-using System.CommandLine;
-using System.CommandLine.Builder;
-using System.CommandLine.Parsing;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using Walrus.Core;
-
-namespace Walrus.CLI
+﻿namespace Walrus.CLI
 {
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
+    using System;
+    using System.CommandLine;
+    using System.CommandLine.Builder;
+    using System.CommandLine.Parsing;
+    using System.Linq;
+    using System.Reflection;
+    using System.Threading.Tasks;
+    using Walrus.Core;
+
     class Program
     {
         private static readonly Lazy<Assembly> ThisAssembly = new(() => typeof(Program).Assembly);
@@ -65,7 +65,7 @@ namespace Walrus.CLI
                         configure.AddDebug();
                         configure.AddConsole();
                     });
-            
+
             services.AddSingleton<IConfiguration>(configuration);
             services.AddSingleton(provider =>
             {

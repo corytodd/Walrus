@@ -1,9 +1,9 @@
-﻿using LibGit2Sharp;
-using System.Collections.Generic;
-using System.IO;
-
-namespace Walrus.Core.Internal
+﻿namespace Walrus.Core.Internal
 {
+    using LibGit2Sharp;
+    using System.Collections.Generic;
+    using System.IO;
+
     internal static class Utilities
     {
         /// <summary>
@@ -20,7 +20,7 @@ namespace Walrus.Core.Internal
                 foreach (var directory in Directory.GetDirectories(root))
                 {
 
-                    foreach(var subDirectory in EnumerateDirectoriesToDepth(directory, depth))
+                    foreach (var subDirectory in EnumerateDirectoriesToDepth(directory, depth))
                     {
                         yield return subDirectory;
                     }

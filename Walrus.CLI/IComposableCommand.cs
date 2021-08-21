@@ -1,7 +1,7 @@
-﻿using System.CommandLine;
-
-namespace Walrus.CLI
+﻿namespace Walrus.CLI
 {
+    using System.CommandLine;
+
     /// <summary>
     /// Basic unit of work in the CLI. Each command requires a Name
     /// which is the invocation verb for the CLI. The description is 

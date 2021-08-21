@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using Walrus.Core.Internal;
-
-namespace Walrus.Core
+﻿namespace Walrus.Core
 {
+    using Microsoft.Extensions.Logging;
+    using System.Collections.Generic;
+    using Walrus.Core.Internal;
+
     public class WalrusService : IWalrusService
     {
         private ILogger _logger;

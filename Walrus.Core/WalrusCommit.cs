@@ -1,8 +1,8 @@
-﻿using LibGit2Sharp;
-using System;
-
-namespace Walrus.Core
+﻿namespace Walrus.Core
 {
+    using LibGit2Sharp;
+    using System;
+
     /// <summary>
     /// TODO: do we want to wrap this type or use the raw LibGit2 type?
     /// </summary>

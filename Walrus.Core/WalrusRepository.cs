@@ -1,11 +1,11 @@
-﻿using LibGit2Sharp;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.IO;
-
-namespace Walrus.Core
+﻿namespace Walrus.Core
 {
+    using LibGit2Sharp;
+    using Microsoft.Extensions.Logging;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+
     /// <summary>
     /// TODO: do we want to wrap this type or use the raw LibGit2 type?
     /// </summary>

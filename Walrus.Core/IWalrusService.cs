@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace Walrus.Core
+﻿namespace Walrus.Core
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Warus service provides access to system Git repositories
     /// </summary>

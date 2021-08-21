@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace Walrus.Core
+﻿namespace Walrus.Core
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Walrus service configuration
     /// </summary>

@@ -1,8 +1,8 @@
-﻿using System.CommandLine;
-using Walrus.Core;
-
-namespace Walrus.CLI.Commands
+﻿namespace Walrus.CLI.Commands
 {
+    using System.CommandLine;
+    using Walrus.Core;
+
     /// <summary>
     /// Command command implementation
     /// </summary>

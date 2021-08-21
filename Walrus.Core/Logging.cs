@@ -1,8 +1,8 @@
-using Microsoft.Extensions.Logging;
-using System;
-
 namespace Walrus.Core
 {
+    using Microsoft.Extensions.Logging;
+    using System;
+
     /// <summary>
     ///     Logging implementation that is framework agnostic
     ///     Credit to https://github.com/NLog/NLog.Extensions.Logging/issues/379

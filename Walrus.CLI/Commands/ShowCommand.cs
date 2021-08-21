@@ -1,14 +1,13 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.CommandLine;
-using System.CommandLine.Invocation;
-using System.Linq;
-using System.Text.Json;
-using Walrus.Core;
-
-namespace Walrus.CLI.Commands
+﻿namespace Walrus.CLI.Commands
 {
+    using Microsoft.Extensions.Logging;
+    using System;
+    using System.Collections.Generic;
+    using System.CommandLine;
+    using System.CommandLine.Invocation;
+    using System.Text.Json;
+    using Walrus.Core;
+
     /// <summary>
     /// Shows information about the specified Walrus feature
     /// </summary>

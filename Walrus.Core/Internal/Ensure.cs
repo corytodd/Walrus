@@ -1,7 +1,6 @@
-using System;
-
 namespace Walrus.Core.Internal
 {
+    using System;
 
     /// <summary>
     /// A helper class for ensuring parameter conditions.
