@@ -16,6 +16,6 @@ namespace Walrus.Core
         /// <summary>
         /// List of repository roots to scan
         /// </summary>
-        public IList<string> RepositoryRoots { get; set;  }
+        public IList<string>? RepositoryRoots { get; set; }
     }
 }

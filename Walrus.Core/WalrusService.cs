@@ -20,6 +20,11 @@ namespace Walrus.Core
         /// <inheritdoc />
         public IEnumerable<WalrusRepository> GetRepositories()
         {
+            if (Config.RepositoryRoots is null)
+            {
+                yield break;
+            }
+
             foreach (var root in Config.RepositoryRoots)
             {
                 var directories = Utilities.EnumerateDirectoriesToDepth(root, Config.DirectoryScanDepth);

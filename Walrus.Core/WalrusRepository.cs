@@ -20,12 +20,14 @@ namespace Walrus.Core
         /// <summary>
         /// Absolute path to Git repo
         /// </summary>
-        public string RepositoryPath => Path.GetDirectoryName(_repository.Info.WorkingDirectory);
+        public string? RepositoryPath => Path.GetDirectoryName(_repository?.Info?.WorkingDirectory);
+
+
 
         /// <summary>
         /// Most recent commit message
         /// </summary>
-        public string LastCommit => _repository.Head?.Tip?.Message;
+        public string? LastCommit => _repository.Head?.Tip?.Message;
 
         /// <summary>
         /// Returns list of all commits in this repo in specified time range
