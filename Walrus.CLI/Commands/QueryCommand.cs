@@ -77,10 +77,18 @@
                 .OrderBy(c => c.Timestamp)
                 .AsEnumerable();
 
+            // Avoid calling Count() on the commits enumerable because it is slow
+            int? commitCount = null;
             if (printTable)
             {
-                PrintTable(commits);
+                commitCount = PrintTable(commits);
             }
+
+            commitCount ??= commits.Count();
+
+            Console.WriteLine(new string('=', Console.WindowWidth / 2));
+            Console.WriteLine("Total Commits: {0}", commitCount);
+            Console.WriteLine(new string('=', Console.WindowWidth / 2));
         }
 
         /// <summary>
@@ -89,31 +97,31 @@
         ///     SHA and commit title are shown for each commit.
         /// </summary>
         /// <param name="commits">Commits to print</param>
-        private void PrintTable(IEnumerable<WalrusCommit> commits)
+        /// <returns>Count of commits in commit</returns>
+        private int PrintTable(IEnumerable<WalrusCommit> commits)
         {
+            var count = 0;
             var header = new string('-', Console.WindowWidth / 2);
 
             foreach (var groupRepo in commits.GroupBy(c => c.RepoName))
             {
-                Console.WriteLine($"Repository: {groupRepo.Key}");
+                Console.WriteLine($"Repository: {groupRepo.Key} [file://{groupRepo.First().RepoPath}]");
                 Console.WriteLine(header);
 
                 foreach (var groupDay in groupRepo.GroupBy(g => g.Timestamp.Date))
                 {
                     Console.WriteLine($"{groupDay.Key:d}: {groupDay.Count()} Commits");
 
-                    foreach(var commit in groupDay)
+                    foreach (var commit in groupDay)
                     {
-                        Console.WriteLine($"\t{commit.Sha} {commit.Message}");
+                        Console.WriteLine($"\t{commit.Timestamp:HH:mm} {commit.Sha} {commit.Message}");
+                        ++count;
                     }
                 }
-                Console.WriteLine();
+                Console.WriteLine(Environment.NewLine);
             }
 
-            var count = commits.Count();
-
-            Console.WriteLine(new string('=', Console.WindowWidth / 2));
-            Console.WriteLine("Total Commits: {0}", count);
+            return count;
         }
     }
 }

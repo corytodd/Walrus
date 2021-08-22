@@ -22,12 +22,12 @@
         /// <summary>
         /// Name of folder containing Git repo
         /// </summary>
-        public string? RepositoryName => Path.GetFileName(RepositoryPath);
+        public string RepositoryName => Path.GetFileName(RepositoryPath);
 
         /// <summary>
         /// Absolute path to Git repo
         /// </summary>
-        public string? RepositoryPath => Path.GetDirectoryName(_repository?.Info?.WorkingDirectory);
+        public string RepositoryPath => Path.GetDirectoryName(_repository?.Info?.WorkingDirectory)!;
 
         /// <summary>
         /// Most recent commit message
@@ -103,7 +103,7 @@
                 var commit = commitIter.Current;
                 if (IsMatch(commit, query))
                 {
-                    yield return new WalrusCommit(RepositoryName!, commit);
+                    yield return new WalrusCommit(this, commit);
                 }
             } while (true);
 

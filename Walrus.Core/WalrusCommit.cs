@@ -2,24 +2,34 @@
 {
     using LibGit2Sharp;
     using System;
+    using System.IO;
+    using Walrus.Core.Internal;
 
     /// <summary>
     /// TODO: do we want to wrap this type or use the raw LibGit2 type?
     /// </summary>
     public class WalrusCommit
     {
+        private readonly WalrusRepository _repository;
         private readonly Commit _commit;
 
-        public WalrusCommit(string repoName, Commit commit)
+        public WalrusCommit(WalrusRepository repository, Commit commit)
         {
-            RepoName = repoName;
+            Ensure.IsNotNull(nameof(repository), repository);
+            Ensure.IsNotNull(nameof(commit), commit);
+
+            _repository = repository;
             _commit = commit;
         }
+        /// <summary>
+        /// Path to repository containing this commit5
+        /// </summary>
+        public string RepoPath => _repository.RepositoryPath!;
 
         /// <summary>
         /// Name of Git repo this commit belongs to
         /// </summary>
-        public string RepoName { get; }
+        public string RepoName => _repository.RepositoryName!;
 
         /// <summary>
         /// Commit message text
