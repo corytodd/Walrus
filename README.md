@@ -27,7 +27,7 @@ walrus.cli show repos
   
 Count commits between March 2 and Jun 2 of 2021. This includes all authors on the currently checked out branch.
 ```
-walrus.cli query --after "Mar 2 2021" --before "Jun 2 2021"`
+walrus.cli query --after "Mar 2 2021" --before "Jun 2 2021"
 ```
   
 
