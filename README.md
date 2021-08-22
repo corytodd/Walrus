@@ -15,6 +15,10 @@ overarching goal of this project is simplicity with the ability to opt-in to com
 
 ## Getting Started
 
+This utility can be compiled and placed on your path. See `tools/publish.ps1` for how to build a minimal binary.
+
+Alternatively (and recommended) you can use `dotnet tool` to create and install a global tool. See `tools/install_as_tool.ps1` for how to do this.
+
 You need a JSON config file to get started located at env WALRUS_CONFIG_FILE or in the same directory as the binary named `walrus.json`. 
 The contents should look something like this is:
 
@@ -32,30 +36,32 @@ If you like to keep a flat code directory then you can set `DirectoryScanDepth` 
 
 ## Examples
 
+These example assume you have install Walrus.CLI as a `dotnet tool`.
+
 Show the active configuration
 ```
-walrus.cli show config
+walrusc show config
 ```
   
 Print a list of all repositories
 ```
-walrus.cli show repos
+walrusc show repos
 ```
   
 Count commits between March 2 and Jun 2 of 2021. This includes all authors on the currently checked out branch.
 ```
-walrus.cli query --after "Mar 2 2021" --before "Jun 2 2021"
+walrusc query --after "Mar 2 2021" --before "Jun 2 2021"
 ```
   
 
 Count commits on all branches since last week (default if --after is not specified) and restrict to a single author.
 ```
-walrus.cli query --all-branches --author-email cory@email.com
+walrusc query --all-branches --author-email cory@email.com
 ```
 
 Print commit summary by repo and date to the console.
 ```
-walrus.cli query --author-email cory@email.com --print-table
+walrusc query --author-email cory@email.com --print-table
 
 Repository: uarch_benchmarks [file://H:\code\system\uarch_benchmarks]
 ----------------------------------------------------------------------------------------------------
@@ -101,4 +107,5 @@ Total Commits: 23
 - [x] Basic date/author query interface 
 - [x] Simple CLI 
 - [x] Table style CLI output
+- [x] Create dotnet tool
 - [ ] Calendar style GUI 

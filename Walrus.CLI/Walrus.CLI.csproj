@@ -1,8 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <SemVer>0.1.0</SemVer>
+    <Suffix></Suffix>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
+    <PackAsTool>true</PackAsTool>
+    <AssemblyName>corytodd.us.walrusc</AssemblyName>
+    <ToolCommandName>walrusc</ToolCommandName>
+    <PackageOutputPath>../dist</PackageOutputPath>
+    <AssemblyVersion>$(SemVer)</AssemblyVersion>
+    <FileVersion>$(SemVer)</FileVersion>
+    <Version>$(SemVer)$(Suffix)</Version>
+    <Copyright>$(Year) Cory Todd</Copyright>
+    <Authors>Cory Todd</Authors>
+    <Description>A multi-repo Git query tool</Description>
   </PropertyGroup>
 
   <ItemGroup>
