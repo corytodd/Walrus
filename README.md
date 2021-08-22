@@ -15,7 +15,7 @@ overarching goal of this project is simplicity with the ability to opt-in to com
 
 ## Getting Started
 
-You need a `walrus.config` file to get started. Something like this is enough:
+You need a `walrus.json` file to get started. Something like this is enough:
 
 ```
 {
