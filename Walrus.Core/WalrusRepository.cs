@@ -119,12 +119,14 @@
         /// <returns>True if commit satisfies query</returns>
         private bool IsMatch(Commit commit, WalrusQuery query)
         {
-            if (string.IsNullOrEmpty(query.AuthorEmail))
-            {
-                return commit.Author.When >= query.After && commit.Author.When < query.Before;
-            }
+            var isMatch = true;
 
-            return commit.Author.Email == query.AuthorEmail && commit.Author.When >= query.After && commit.Author.When < query.Before;
+            if (!string.IsNullOrEmpty(query.AuthorEmail))
+            {
+                isMatch = commit.Author.Email == query.AuthorEmail;
+            }            
+
+            return isMatch && commit.Author.When >= query.After && commit.Author.When < query.Before;
         }
     }
 }

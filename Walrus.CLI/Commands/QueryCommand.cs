@@ -37,6 +37,10 @@
                 "--author-email", 
                 "Return commits from this author"));
 
+            Command.AddOption(new Option<string>(
+                "--repo-name",
+                "Return commits from this repository. Case insensitive."));
+
             Command.Handler = CommandHandler.Create((WalrusQuery query) =>
             {
                 HandleQuery(query);
@@ -59,6 +63,7 @@
 
             var commits = Walrus
                 .GetRepositories()
+                .Where(r => string.IsNullOrEmpty(query.RepoName) || r.RepositoryName.Equals(query.RepoName, StringComparison.CurrentCultureIgnoreCase))
                 .AsParallel()
                 .Select(r => r.GetCommits(query))
                 .SelectMany(c => c)

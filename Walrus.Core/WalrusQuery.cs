@@ -27,6 +27,11 @@
         /// </summary>
         public string? AuthorEmail { get; set; }
 
+        /// <summary>
+        /// Restrict results to this repository
+        /// </summary>
+        public string? RepoName { get; set; }
+
         /// <inheritdoc />
         public override string ToString()
         {
