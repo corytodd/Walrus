@@ -39,8 +39,8 @@
         /// Filter and return only valid Git repositories from the specified directory list
         /// </summary>
         /// <param name="directories">Directories to filter</param>
-        /// <returns></returns>
-        public static IEnumerable<WalrusRepository> GetValidRepositories(IEnumerable<string> directories)
+        /// <returns>List of valid Git repositories</returns>
+        public static IEnumerable<Repository> GetValidRepositories(IEnumerable<string> directories)
         {
             foreach (var directory in directories)
             {
@@ -52,7 +52,7 @@
 
                 var repository = new Repository(directory);
 
-                yield return new WalrusRepository(repository);
+                yield return repository;
             }
         }
     }

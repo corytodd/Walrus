@@ -44,7 +44,8 @@
 
                 foreach (var repo in Utilities.GetValidRepositories(directories))
                 {
-                    yield return repo;
+                    var repository = new WalrusRepository(repo);
+                    yield return repository;
                 }
             }
         }
