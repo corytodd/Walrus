@@ -54,8 +54,9 @@
         /// <returns></returns>
         private static ServiceProvider ConfigureServices()
         {
+            var configFile = Environment.GetEnvironmentVariable("WALRUS_CONFIG_FILE") ?? "walrus.json";
             var configuration = new ConfigurationBuilder()
-                .AddJsonFile("walrus.json")
+                .AddJsonFile(configFile)
                 .Build();
 
             var services = new ServiceCollection()
