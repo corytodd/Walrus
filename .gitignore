@@ -1,5 +1,5 @@
 /.vs/
 /**/bin/**/*
 /**/obj/**/*
-/Walrus.CLI/walrus.json
+/dist/
 /Walrus.CLI/Properties/launchSettings.json
