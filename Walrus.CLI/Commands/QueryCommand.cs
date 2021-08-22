@@ -70,7 +70,7 @@
 
             var commits = Walrus
                 .GetRepositories()
-                .Where(r => string.IsNullOrEmpty(query.RepoName) || r.RepositoryName.Equals(query.RepoName, StringComparison.CurrentCultureIgnoreCase))
+                .Where(r => FilterRepo(r, query))
                 .AsParallel()
                 .Select(r => r.GetCommits(query))
                 .SelectMany(c => c)
@@ -92,29 +92,41 @@
         }
 
         /// <summary>
+        /// Returns true if repository should be included in query
+        /// </summary>
+        /// <param name="repository">Repository to test</param>
+        /// <param name="query">Query parameters</param>
+        /// <returns>True if filter should be included</returns>
+        private static bool FilterRepo(WalrusRepository repository, WalrusQuery query)
+        {
+            return string.IsNullOrEmpty(query.RepoName) || repository.RepositoryName.Equals(query.RepoName, StringComparison.CurrentCultureIgnoreCase);
+        }
+
+        /// <summary>
         ///     Rough table format printer for commit list
         ///     Commits are sorted by repo then by day, a summary 
         ///     SHA and commit title are shown for each commit.
         /// </summary>
         /// <param name="commits">Commits to print</param>
         /// <returns>Count of commits in commit</returns>
-        private int PrintTable(IEnumerable<WalrusCommit> commits)
+        private static int PrintTable(IEnumerable<WalrusCommit> commits)
         {
             var count = 0;
             var header = new string('-', Console.WindowWidth / 2);
 
             foreach (var groupRepo in commits.GroupBy(c => c.RepoName))
             {
+                // file:// make a ctrl+clickable link in supported terminals
                 Console.WriteLine($"Repository: {groupRepo.Key} [file://{groupRepo.First().RepoPath}]");
                 Console.WriteLine(header);
 
                 foreach (var groupDay in groupRepo.GroupBy(g => g.Timestamp.Date))
                 {
-                    Console.WriteLine($"{groupDay.Key:d}: {groupDay.Count()} Commits");
+                    Console.WriteLine($"{groupDay.Key:yyyy-MM-dd}: {groupDay.Count()} Commits");
 
                     foreach (var commit in groupDay)
                     {
-                        Console.WriteLine($"\t{commit.Timestamp:HH:mm} {commit.Sha} {commit.Message}");
+                        Console.WriteLine($"\t{commit.Timestamp:HH:mm} {commit.Sha.Substring(0, 7)} {commit.Message}");
                         ++count;
                     }
                 }
