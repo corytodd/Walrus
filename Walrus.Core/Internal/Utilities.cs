@@ -1,6 +1,7 @@
 ﻿namespace Walrus.Core.Internal
 {
     using LibGit2Sharp;
+    using System;
     using System.Collections.Generic;
     using System.IO;
 
@@ -15,18 +16,22 @@
         /// <returns></returns>
         public static IEnumerable<string> EnumerateDirectoriesToDepth(string root, int depth)
         {
-            while (--depth > 0)
+            if (--depth > 0)
             {
                 foreach (var directory in Directory.GetDirectories(root))
                 {
-
-                    foreach (var subDirectory in EnumerateDirectoriesToDepth(directory, depth))
+                    // Do not dig deeper into the repo if we have found a root
+                    if (Repository.IsValid(directory))
                     {
-                        yield return subDirectory;
+                        yield return directory;
                     }
-
-                    yield return directory;
-
+                    else
+                    {
+                        foreach (var subDirectory in EnumerateDirectoriesToDepth(directory, depth))
+                        {
+                            yield return subDirectory;
+                        }
+                    }
                 }
             }
         }
