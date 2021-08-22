@@ -13,6 +13,22 @@ We don't want to reinvent libgit2sharp, we just want a nice query interface spec
 For this reason, Gitbase was found to be entirely overkill. It is a fantastic tool and I do make use of it but managing it is kind of a pain. For this reason, the 
 overarching goal of this project is simplicity with the ability to opt-in to complexity when needed.
 
+## Getting Started
+
+You need a `walrus.config` file to get started. Something like this is enough:
+
+```
+{
+  "DirectoryScanDepth": 3,
+  "RepositoryRoots": [
+    "H:\\code",
+  ]
+}
+```
+
+If you like to keep a flat code directory then you can set `DirectoryScanDepth` to a smaller value.
+
+
 ## Examples
 
 Show the active configuration
@@ -41,7 +57,7 @@ Print commit summary by repo and date to the console.
 walrus.cli query --author-email cory@email.com --print-table
 
 Repository: uarch_benchmarks [file://H:\code\system\uarch_benchmarks]
--------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
 8/15/2021: 3 Commits
         19:16 2bbde046b8232f58357bf89b1b4478f3275e7367 add cmake build scripts
         19:38 2e630b5e20d2e66e3809641fc648ec3a7eeef3f6 [cmake] use dots in app names
@@ -49,7 +65,7 @@ Repository: uarch_benchmarks [file://H:\code\system\uarch_benchmarks]
 
 
 Repository: Walrus [file://H:\code\tools\Walrus]
--------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
 8/21/2021: 19 Commits
         12:02 ba29639d9eef1e33ae74d4f487eaabf04ce66afc First commit
         14:01 89421e0332f1db429a150ffac221a2d46454947a add logging to core library
@@ -63,7 +79,7 @@ Repository: Walrus [file://H:\code\tools\Walrus]
         14:10 f47fb2990a0d9596e908a23a25e248b0b10a1f37 ignore test and launch configs
         14:10 a238cd6a745727f527ac0e7f7da55d955c26b437 remove noisy log line
         14:26 79681875e6493fcbfc0496822d440f46ad1a857a add author to query parameters
-        14:29 48d258f0a443b68bd8619b982b26db6571de7853 exclude remote branches (like we said we would)
+        14:29 48d258f0a443b68bd8619b982b26db6571de7853 exclude remote branches
         14:33 ce9c3cc6ebbf615c5ee354b28a06d935f0bff8a8 remove walrus service
         15:12 9142eef111af4786c0070fe7f1c75a82564fd861 make query parallel
         15:13 ef7118ce0300dd0455983ff93af22d8cb2413a97 add more info to WalrusCommit
@@ -74,13 +90,14 @@ Repository: Walrus [file://H:\code\tools\Walrus]
         09:12 82eb14b37e57a665e7077fb4754a8b3e6a8af6de add file link to cli table output
 
 
-===============================================================================================================================
+====================================================================================================
 Total Commits: 23
-===============================================================================================================================
+====================================================================================================
 ```
 
 ## Roadmap
 
 - [x] Basic date/author query interface 
 - [x] Simple CLI 
+- [x] Table style CLI output
 - [ ] Calendar style GUI 
