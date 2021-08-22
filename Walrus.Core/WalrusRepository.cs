@@ -8,14 +8,21 @@
     using Walrus.Core.Internal;
 
     /// <summary>
-    /// TODO: do we want to wrap this type or use the raw LibGit2 type?
+    /// This wrapper provide safe access to some aspects of LibGit2Sharp.Repository
+    /// that I found to be a little unstable.
     /// </summary>
     public class WalrusRepository
     {
         private readonly Repository _repository;
 
+        /// <summary>
+        /// Create a new WalrusRepository based on a git repository
+        /// </summary>
+        /// <param name="repository">Repository to wrap</param>
         internal WalrusRepository(Repository repository)
         {
+            Ensure.IsNotNull(nameof(repository), repository);
+
             _repository = repository;
         }
 
@@ -124,7 +131,7 @@
             if (!string.IsNullOrEmpty(query.AuthorEmail))
             {
                 isMatch = commit.Author.Email == query.AuthorEmail;
-            }            
+            }
 
             return isMatch && commit.Author.When >= query.After && commit.Author.When < query.Before;
         }

@@ -2,7 +2,6 @@
 {
     using LibGit2Sharp;
     using System;
-    using System.IO;
     using Walrus.Core.Internal;
 
     /// <summary>

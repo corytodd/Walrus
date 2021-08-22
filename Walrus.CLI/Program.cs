@@ -7,15 +7,14 @@
     using System.CommandLine;
     using System.CommandLine.Builder;
     using System.CommandLine.Parsing;
-    using System.Linq;
-    using System.Reflection;
     using System.Threading.Tasks;
     using Walrus.Core;
 
     class Program
     {
-        private static readonly Lazy<Assembly> ThisAssembly = new(() => typeof(Program).Assembly);
-
+        /// <summary>
+        /// Entry point
+        /// </summary>
         static async Task<int> Main(string[] args)
         {
             var serviceProvider = ConfigureServices();
@@ -74,19 +73,11 @@
             });
             services.AddTransient<IWalrusService, WalrusService>();
 
-            // All command should dervice from BaseCommand but we'll accept the base interface as well
-            var commandType = typeof(IComposableCommand);
-            var commands = ThisAssembly.Value
-                .GetTypes()
-                .Where(x => !x.IsAbstract && commandType.IsAssignableFrom(x));
-
-            foreach (var command in commands)
-            {
-                services.AddSingleton(commandType, command);
-            }
+            services.AddCliCommands();
 
             var provider = services.BuildServiceProvider();
-            WalrusLog.LoggerFactory = provider.GetService<ILoggerFactory>();
+
+            provider.AddWalrusLogging();
 
             return provider;
         }
