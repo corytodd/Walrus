@@ -108,7 +108,7 @@
                 }
 
                 var commit = commitIter.Current;
-                if (IsMatch(commit, query))
+                if (query.IsMatch(commit))
                 {
                     yield return new WalrusCommit(this, commit);
                 }
@@ -117,24 +117,6 @@
 
 
             yield break;
-        }
-
-        /// <summary>
-        /// Returns true if commit satisfies query
-        /// </summary>
-        /// <param name="commit">Commit to test</param>
-        /// <param name="query">Query parameters</param>
-        /// <returns>True if commit satisfies query</returns>
-        private static bool IsMatch(Commit commit, WalrusQuery query)
-        {
-            var isMatch = true;
-
-            if (!string.IsNullOrEmpty(query.AuthorEmail))
-            {
-                isMatch = commit.Author.Email == query.AuthorEmail;
-            }
-
-            return isMatch && commit.Author.When >= query.After && commit.Author.When < query.Before;
         }
     }
 }

@@ -36,7 +36,11 @@
 
             Command.AddOption(new Option<string>(
                 "--author-email",
-                "Return commits from this author"));
+                "Return commits from this author. Takes precendence over --author-alias."));
+
+            Command.AddOption(new Option<string>(
+                "--author-alias",
+                "Return commits from any alias of this author"));
 
             Command.AddOption(new Option<string>(
                 "--repo-name",
@@ -49,6 +53,8 @@
 
             Command.Handler = CommandHandler.Create((WalrusQuery query, bool printTable) =>
             {
+                query.AddConfiguration(walrus.Config);
+
                 HandleQuery(query, printTable);
             });
         }
@@ -126,7 +132,7 @@
 
                     foreach (var commit in groupDay)
                     {
-                        Console.WriteLine($"\t{commit.Timestamp:HH:mm} {commit.Sha.Substring(0, 7)} {commit.Message}");
+                        Console.WriteLine($"\t{commit.Timestamp:HH:mm} {commit.Sha.Substring(0, 7)} [{commit.AuthorEmail}] {commit.Message}");
                         ++count;
                     }
                 }

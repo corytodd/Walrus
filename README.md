@@ -27,7 +27,13 @@ The contents should look something like this is:
   "DirectoryScanDepth": 3,
   "RepositoryRoots": [
     "H:\\code",
-  ]
+  ],
+  "AuthorAliases": {
+	  "illyum": {
+		  "illy@home.com",
+		  "illy@work.com"
+	  }
+  }
 }
 ```
 
@@ -100,6 +106,11 @@ Repository: Walrus [file://H:\code\tools\Walrus]
 ====================================================================================================
 Total Commits: 23
 ====================================================================================================
+```
+
+Show all commits from all aliases known to be associated with a name. This requires an entry in your configuration file.
+```
+walrusc query --author-alias illyum
 ```
 
 ## Roadmap
