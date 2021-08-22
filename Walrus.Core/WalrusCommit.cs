@@ -5,50 +5,61 @@
     using Walrus.Core.Internal;
 
     /// <summary>
-    /// TODO: do we want to wrap this type or use the raw LibGit2 type?
+    /// Wraps commit information from Git
     /// </summary>
     public class WalrusCommit
     {
-        private readonly WalrusRepository _repository;
-        private readonly Commit _commit;
-
-        public WalrusCommit(WalrusRepository repository, Commit commit)
+        /// <summary>
+        /// Create a new commit
+        /// </summary>
+        /// <param name="repository">Repo that commit belongs to</param>
+        /// <param name="commit">Commit</param>
+        internal WalrusCommit(WalrusRepository repository, Commit commit)
         {
             Ensure.IsNotNull(nameof(repository), repository);
             Ensure.IsNotNull(nameof(commit), commit);
 
-            _repository = repository;
-            _commit = commit;
+            RepoPath = repository.RepositoryPath;
+            RepoName = repository.RepositoryName;
+            Message = commit.MessageShort;
+            Sha = commit.Sha;
+            AuthorEmail = commit.Author.Email;
+            Timestamp = commit.Author.When.DateTime;
         }
         /// <summary>
         /// Path to repository containing this commit5
         /// </summary>
-        public string RepoPath => _repository.RepositoryPath!;
+        public string RepoPath { get; }
 
         /// <summary>
         /// Name of Git repo this commit belongs to
         /// </summary>
-        public string RepoName => _repository.RepositoryName!;
+        public string RepoName { get; }
 
         /// <summary>
         /// Commit message text
         /// </summary>
-        public string Message => _commit.MessageShort;
+        public string Message { get; }
 
         /// <summary>
         /// Commit hash
         /// </summary>
-        public string Sha => _commit.Sha;
+        public string Sha { get; }
+
+        /// <summary>
+        /// Email address of commit author
+        /// </summary>
+        public string AuthorEmail { get; }
 
         /// <summary>
         /// Date of commit
         /// </summary>
-        public DateTime Timestamp => _commit.Author.When.DateTime;
+        public DateTime Timestamp { get; }
 
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"[{RepoName}] {Timestamp} {_commit.Author.Email} {Sha} {Message}";
+            return $"[{RepoName}] {Timestamp} {AuthorEmail} {Sha} {Message}";
         }
     }
 }

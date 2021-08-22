@@ -24,22 +24,19 @@
             Ensure.IsNotNull(nameof(repository), repository);
 
             _repository = repository;
+            RepositoryPath = Path.GetDirectoryName(repository.Info?.WorkingDirectory)!;
+            RepositoryName = Path.GetFileName(RepositoryPath)!;
         }
 
         /// <summary>
         /// Name of folder containing Git repo
         /// </summary>
-        public string RepositoryName => Path.GetFileName(RepositoryPath);
+        public string RepositoryName { get; }
 
         /// <summary>
         /// Absolute path to Git repo
         /// </summary>
-        public string RepositoryPath => Path.GetDirectoryName(_repository?.Info?.WorkingDirectory)!;
-
-        /// <summary>
-        /// Most recent commit message
-        /// </summary>
-        public string? LastCommit => _repository.Head?.Tip?.Message;
+        public string RepositoryPath { get; }
 
         /// <summary>
         /// Returns list of all commits in this repo that satisfy the query
@@ -57,6 +54,9 @@
 
                 foreach (var branch in _repository.Branches)
                 {
+                    // Ignore remote branches because
+                    // 1) they are slow
+                    // 2) they might be shallow
                     if (branch.IsRemote)
                     {
                         continue;
@@ -112,6 +112,7 @@
                 {
                     yield return new WalrusCommit(this, commit);
                 }
+
             } while (true);
 
 
@@ -124,7 +125,7 @@
         /// <param name="commit">Commit to test</param>
         /// <param name="query">Query parameters</param>
         /// <returns>True if commit satisfies query</returns>
-        private bool IsMatch(Commit commit, WalrusQuery query)
+        private static bool IsMatch(Commit commit, WalrusQuery query)
         {
             var isMatch = true;
 
