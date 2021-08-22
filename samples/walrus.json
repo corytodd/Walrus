@@ -3,4 +3,10 @@
   "RepositoryRoots": [
     "H:\\code"
   ]
+  "AuthorAliases": {
+	  "illyum": {
+		  "illy@home.com",
+		  "illy@work.com"
+	  }
+  }
 }

@@ -17,5 +17,12 @@
         /// List of repository roots to scan
         /// </summary>
         public IList<string>? RepositoryRoots { get; set; }
+
+        /// <summary>
+        /// List of author aliases
+        /// 
+        /// "some name" : { "email1@example.com", "email2@work.com" }
+        /// </summary>
+        public IDictionary<string, IList<string>>? AuthorAliases { get; set; }
     }
 }
