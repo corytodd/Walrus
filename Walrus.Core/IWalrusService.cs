@@ -1,5 +1,6 @@
 ﻿namespace Walrus.Core
 {
+    using System;
     using System.Collections.Generic;
 
     /// <summary>
@@ -11,6 +12,14 @@
         /// Active configuration
         /// </summary>
         WalrusConfig Config { get; }
+
+        /// <summary>
+        /// Executes the specified query
+        /// </summary>
+        /// <param name="query">Query to run</param>
+        /// <returns>Resulting commit</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Raised if query grouping method is invalid</exception>
+        IEnumerable<CommitGroup> ExecuteQuery(WalrusQuery query);
 
         /// <summary>
         /// Returns a list of all repositories that Walrus can see

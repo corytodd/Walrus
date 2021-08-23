@@ -47,6 +47,11 @@
         public string? RepoName { get; set; }
 
         /// <summary>
+        /// Group results using this rule
+        /// </summary>
+        public QueryGrouping GroupBy { get; set; }
+
+        /// <summary>
         /// Assign service configuration to this query which will augment
         /// certain query parameters. This includes:
         /// - the user alias feature.
@@ -99,7 +104,25 @@
         /// <inheritdoc />
         public override string ToString()
         {
-            return $"After={After}, Before={Before}, AllBranches={AllBranches}, Author.Email={AuthorEmail}, Author.Alias={AuthorAlias}";
+            return $"After={After}, Before={Before}, AllBranches={AllBranches}, Author.Email={AuthorEmail}, Author.Alias={AuthorAlias}, Grouping={GroupBy}";
+        }
+
+        public enum QueryGrouping
+        {
+            /// <summary>
+            /// Group commits by repo
+            /// </summary>
+            Repo,
+
+            /// <summary>
+            /// Group commits by date (specifcally by day)
+            /// </summary>
+            Date,
+
+            /// <summary>
+            /// Group commits by author email or alias
+            /// </summary>
+            Author
         }
     }
 }
