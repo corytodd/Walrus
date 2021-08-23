@@ -19,7 +19,7 @@ This utility can be compiled and placed on your path. See `tools/publish.ps1` fo
 
 Alternatively (and recommended) you can use `dotnet tool` to create and install a global tool. See `tools/install_as_tool.ps1` for how to do this.
 
-You need a JSON config file to get started located at env WALRUS_CONFIG_FILE or in the same directory as the binary named `walrus.json`. 
+You need a JSON config file to get started located at env `WALRUS_CONFIG_FILE` or in the same directory as the binary named `walrus.json`. 
 The contents should look something like this is:
 
 ```
@@ -29,10 +29,10 @@ The contents should look something like this is:
     "H:\\code",
   ],
   "AuthorAliases": {
-	  "illyum": {
+	  "illyum": [
 		  "illy@home.com",
 		  "illy@work.com"
-	  }
+	  ]
   }
 }
 ```
