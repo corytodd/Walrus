@@ -46,16 +46,16 @@
                 "--repo-name",
                 "Return commits from this repository. Case insensitive."));
 
-            Command.AddOption(new Option(
-                "--print-table",
-                "Print results in a tree format"
+            Command.AddOption(new Option<WalrusQuery.QueryGrouping>(
+                "--group-by",
+                "Result grouping method"
                 ));
 
-            Command.Handler = CommandHandler.Create((WalrusQuery query, bool printTable) =>
+            Command.Handler = CommandHandler.Create((WalrusQuery query) =>
             {
                 query.AddConfiguration(walrus.Config);
 
-                HandleQuery(query, printTable);
+                HandleQuery(query);
             });
         }
 
@@ -69,44 +69,19 @@
         /// Execute Git query
         /// </summary>
         /// <param name="query">Query to execute</param>
-        /// <param name="printTable">True to print results as table</param>
-        private void HandleQuery(WalrusQuery query, bool printTable)
+        private void HandleQuery(WalrusQuery query)
         {
             _logger.LogDebug("HandleQuery: {query}", query);
 
-            var commits = Walrus
-                .GetRepositories()
-                .Where(r => FilterRepo(r, query))
-                .AsParallel()
-                .Select(r => r.GetCommits(query))
-                .SelectMany(c => c)
-                .OrderBy(c => c.Timestamp)
-                .AsEnumerable();
+            var commits = Walrus.ExecuteQuery(query);
 
-            // Avoid calling Count() on the commits enumerable because it is slow
-            int? commitCount = null;
-            if (printTable)
-            {
-                commitCount = PrintTable(commits);
-            }
-
-            commitCount ??= commits.Count();
+            var commitCount = PrintTable(commits, query);
 
             Console.WriteLine(new string('=', Console.WindowWidth / 2));
             Console.WriteLine("Total Commits: {0}", commitCount);
             Console.WriteLine(new string('=', Console.WindowWidth / 2));
         }
 
-        /// <summary>
-        /// Returns true if repository should be included in query
-        /// </summary>
-        /// <param name="repository">Repository to test</param>
-        /// <param name="query">Query parameters</param>
-        /// <returns>True if filter should be included</returns>
-        private static bool FilterRepo(WalrusRepository repository, WalrusQuery query)
-        {
-            return string.IsNullOrEmpty(query.RepoName) || repository.RepositoryName.Equals(query.RepoName, StringComparison.CurrentCultureIgnoreCase);
-        }
 
         /// <summary>
         ///     Rough table format printer for commit list
@@ -114,28 +89,96 @@
         ///     SHA and commit title are shown for each commit.
         /// </summary>
         /// <param name="commits">Commits to print</param>
+        /// <param name="query">Query parameter</param>
         /// <returns>Count of commits in commit</returns>
-        private static int PrintTable(IEnumerable<WalrusCommit> commits)
+        private static int PrintTable(IEnumerable<CommitGroup> commits, WalrusQuery query)
+        {
+            var count = query.GroupBy switch
+            {
+                WalrusQuery.QueryGrouping.Repo => PrintByRepo(commits),
+                WalrusQuery.QueryGrouping.Date => PrintByDate(commits),
+                WalrusQuery.QueryGrouping.Author => PrintByAuthor(commits),
+                
+                _ => throw new ArgumentOutOfRangeException(nameof(query.GroupBy))
+            };
+
+            return count;
+        }
+
+        /// <summary>
+        /// Print repos to console grouped by repo name
+        /// </summary>
+        private static int PrintByRepo(IEnumerable<CommitGroup> commits)
         {
             var count = 0;
             var header = new string('-', Console.WindowWidth / 2);
 
-            foreach (var groupRepo in commits.GroupBy(c => c.RepoName))
+            foreach (var repoGrouping in commits)
             {
                 // file:// make a ctrl+clickable link in supported terminals
-                Console.WriteLine($"Repository: {groupRepo.Key} [file://{groupRepo.First().RepoPath}]");
+                Console.WriteLine($"Repository: {repoGrouping.Key} [file://{repoGrouping.Data.First().RepoPath}]");
                 Console.WriteLine(header);
 
-                foreach (var groupDay in groupRepo.GroupBy(g => g.Timestamp.Date))
+                foreach (var dateGrouping in repoGrouping.Data.GroupBy(g => g.Timestamp.Date))
                 {
-                    Console.WriteLine($"{groupDay.Key:yyyy-MM-dd}: {groupDay.Count()} Commits");
+                    Console.WriteLine($"{dateGrouping.Key:yyyy-MM-dd}: {dateGrouping.Count()} Commits");
 
-                    foreach (var commit in groupDay)
+                    foreach (var commit in dateGrouping)
                     {
                         Console.WriteLine($"\t{commit.Timestamp:HH:mm} {commit.Sha.Substring(0, 7)} [{commit.AuthorEmail}] {commit.Message}");
                         ++count;
                     }
                 }
+                Console.WriteLine(Environment.NewLine);
+            }
+
+            return count;
+        }
+
+        /// <summary>
+        /// Print repos to console grouped by commit date
+        /// </summary>
+        private static int PrintByDate(IEnumerable<CommitGroup> commits)
+        {
+            var count = 0;
+            var header = new string('-', Console.WindowWidth / 2);
+
+            foreach (var dateGrouping in commits)
+            {
+                Console.WriteLine($"Date: {dateGrouping.Key:yyyy-MM-dd}");
+                Console.WriteLine(header);
+
+                foreach (var commit in dateGrouping.Data)
+                {
+                    Console.WriteLine($"\t{commit.Timestamp:HH:mm} [{commit.RepoName}] {commit.Sha.Substring(0, 7)} [{commit.AuthorEmail}] {commit.Message}");
+                    ++count;
+                }
+
+                Console.WriteLine(Environment.NewLine);
+            }
+
+            return count;
+        }
+
+        /// <summary>
+        /// Print repos to console grouped by author email
+        /// </summary>
+        private static int PrintByAuthor(IEnumerable<CommitGroup> commits)
+        {
+            var count = 0;
+            var header = new string('-', Console.WindowWidth / 2);
+
+            foreach (var authorGrouping in commits)
+            {
+                Console.WriteLine($"Author: {authorGrouping.Key}");
+                Console.WriteLine(header);
+
+                foreach (var commit in authorGrouping.Data)
+                {
+                    Console.WriteLine($"\t{commit.Timestamp:yyyy-MM-dd HH:mm} [{commit.RepoName}] {commit.Sha.Substring(0, 7)} {commit.Message}");
+                    ++count;
+                }
+
                 Console.WriteLine(Environment.NewLine);
             }
 

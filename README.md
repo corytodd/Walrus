@@ -67,7 +67,7 @@ walrusc query --all-branches --author-email cory@email.com
 
 Print commit summary by repo and date to the console.
 ```
-walrusc query --author-email cory@email.com --print-table
+walrusc query --author-email cory@email.com --group-by repo
 
 Repository: uarch_benchmarks [file://H:\code\system\uarch_benchmarks]
 ----------------------------------------------------------------------------------------------------
