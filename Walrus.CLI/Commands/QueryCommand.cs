@@ -1,17 +1,17 @@
 ﻿namespace Walrus.CLI.Commands
 {
-    using Microsoft.Extensions.Logging;
     using System;
     using System.Collections.Generic;
     using System.CommandLine;
     using System.CommandLine.Invocation;
     using System.Linq;
-    using Walrus.Core;
+    using Core;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
-    /// Query all Git repositories
+    ///     Query all Git repositories
     /// </summary>
-    class QueryCommand : BaseCommand
+    internal class QueryCommand : BaseCommand
     {
         private readonly ILogger _logger;
 
@@ -32,7 +32,7 @@
             Command.AddOption(new Option(
                 "--all-branches",
                 "Include all *local* branches in search"
-                ));
+            ));
 
             Command.AddOption(new Option<string>(
                 "--author-email",
@@ -49,7 +49,7 @@
             Command.AddOption(new Option<WalrusQuery.QueryGrouping>(
                 "--group-by",
                 "Result grouping method"
-                ));
+            ));
 
             Command.Handler = CommandHandler.Create((WalrusQuery query) =>
             {
@@ -66,7 +66,7 @@
         public override string Description => "Query all git repositories";
 
         /// <summary>
-        /// Execute Git query
+        ///     Execute Git query
         /// </summary>
         /// <param name="query">Query to execute</param>
         private void HandleQuery(WalrusQuery query)
@@ -85,7 +85,7 @@
 
         /// <summary>
         ///     Rough table format printer for commit list
-        ///     Commits are sorted by repo then by day, a summary 
+        ///     Commits are sorted by repo then by day, a summary
         ///     SHA and commit title are shown for each commit.
         /// </summary>
         /// <param name="commits">Commits to print</param>
@@ -98,7 +98,7 @@
                 WalrusQuery.QueryGrouping.Repo => PrintByRepo(commits),
                 WalrusQuery.QueryGrouping.Date => PrintByDate(commits),
                 WalrusQuery.QueryGrouping.Author => PrintByAuthor(commits),
-                
+
                 _ => throw new ArgumentOutOfRangeException(nameof(query.GroupBy))
             };
 
@@ -106,7 +106,7 @@
         }
 
         /// <summary>
-        /// Print repos to console grouped by repo name
+        ///     Print repos to console grouped by repo name
         /// </summary>
         private static int PrintByRepo(IEnumerable<CommitGroup> commits)
         {
@@ -125,10 +125,12 @@
 
                     foreach (var commit in dateGrouping)
                     {
-                        Console.WriteLine($"\t{commit.Timestamp:HH:mm} {commit.Sha.Substring(0, 7)} [{commit.AuthorEmail}] {commit.Message}");
+                        Console.WriteLine(
+                            $"\t{commit.Timestamp:HH:mm} {commit.Sha.Substring(0, 7)} [{commit.AuthorEmail}] {commit.Message}");
                         ++count;
                     }
                 }
+
                 Console.WriteLine(Environment.NewLine);
             }
 
@@ -136,7 +138,7 @@
         }
 
         /// <summary>
-        /// Print repos to console grouped by commit date
+        ///     Print repos to console grouped by commit date
         /// </summary>
         private static int PrintByDate(IEnumerable<CommitGroup> commits)
         {
@@ -150,7 +152,8 @@
 
                 foreach (var commit in dateGrouping.Data)
                 {
-                    Console.WriteLine($"\t{commit.Timestamp:HH:mm} [{commit.RepoName}] {commit.Sha.Substring(0, 7)} [{commit.AuthorEmail}] {commit.Message}");
+                    Console.WriteLine(
+                        $"\t{commit.Timestamp:HH:mm} [{commit.RepoName}] {commit.Sha.Substring(0, 7)} [{commit.AuthorEmail}] {commit.Message}");
                     ++count;
                 }
 
@@ -161,7 +164,7 @@
         }
 
         /// <summary>
-        /// Print repos to console grouped by author email
+        ///     Print repos to console grouped by author email
         /// </summary>
         private static int PrintByAuthor(IEnumerable<CommitGroup> commits)
         {
@@ -175,7 +178,8 @@
 
                 foreach (var commit in authorGrouping.Data)
                 {
-                    Console.WriteLine($"\t{commit.Timestamp:yyyy-MM-dd HH:mm} [{commit.RepoName}] {commit.Sha.Substring(0, 7)} {commit.Message}");
+                    Console.WriteLine(
+                        $"\t{commit.Timestamp:yyyy-MM-dd HH:mm} [{commit.RepoName}] {commit.Sha.Substring(0, 7)} {commit.Message}");
                     ++count;
                 }
 
