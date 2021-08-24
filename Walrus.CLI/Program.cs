@@ -7,6 +7,7 @@
     using System.CommandLine;
     using System.CommandLine.Builder;
     using System.CommandLine.Parsing;
+    using System.IO;
     using System.Threading.Tasks;
     using Walrus.Core;
 
@@ -17,13 +18,40 @@
         /// </summary>
         static async Task<int> Main(string[] args)
         {
-            var serviceProvider = ConfigureServices();
+            try
+            {
+                var serviceProvider = ConfigureServices();
 
-            Parser parser = BuildParser(serviceProvider);
+                var parser = BuildParser(serviceProvider);
 
-            return await parser.InvokeAsync(args).ConfigureAwait(false);
+                return await parser.InvokeAsync(args).ConfigureAwait(false);
+            }
+            catch (FileNotFoundException ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("ERROR: ");
+                Console.ResetColor();
+                Console.WriteLine("Unable to find configuration file. " + Environment.NewLine +
+                                  "You can provide a configuration file in one of two ways: " + Environment.NewLine +
+                                  "1) Define an env named WALRUS_CONFIG_FILE that points to your configuration file" +
+                                  Environment.NewLine +
+                                  "2) Create a file named walrus.config in your current working directory" +
+                                  Environment.NewLine);
+                Console.WriteLine($"The original exception was: {ex.Message}");
+
+                return 1;
+            }
+            catch (InvalidDataException ex)
+            {               
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("ERROR: ");
+                Console.ResetColor();
+                Console.WriteLine("Your configuration file invalid JSON");
+                Console.WriteLine($"The original exception was: {ex.Message}");
+                return 1;
+            }
         }
-
+        
         /// <summary>
         /// Build command line parser utility to auto-discover all commands in this assembly
         /// </summary>
@@ -59,12 +87,16 @@
                 .Build();
 
             var services = new ServiceCollection()
-                    .AddLogging(configure =>
-                    {
-                        configure.SetMinimumLevel(LogLevel.Debug);
-                        configure.AddDebug();
-                        configure.AddConsole();
-                    });
+                .AddLogging(configure =>
+                {
+#if DEBUG
+                    configure.SetMinimumLevel(LogLevel.Debug);
+                    configure.AddDebug();
+#else
+                    configure.SetMinimumLevel(LogLevel.Error);
+#endif
+                    configure.AddConsole();
+                });
 
             services.AddSingleton<IConfiguration>(configuration);
             services.AddSingleton(provider =>
