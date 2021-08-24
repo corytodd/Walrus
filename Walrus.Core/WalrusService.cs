@@ -50,6 +50,7 @@
                         g.OrderBy(c => c.Timestamp))),
                 
                 WalrusQuery.QueryGrouping.Date => commits
+                    .OrderBy(c => c.Timestamp)
                     .GroupBy(c => c.Timestamp.Date)
                     .Select(g => new CommitGroup(g.Key, 
                         g.OrderBy(c => c.Timestamp))),
