@@ -83,7 +83,7 @@
         {
             var configFile = Environment.GetEnvironmentVariable("WALRUS_CONFIG_FILE") ?? "walrus.json";
             var configuration = new ConfigurationBuilder()
-                .AddJsonFile(configFile)
+                .AddJsonFile(configFile, optional: true)
                 .Build();
 
             var services = new ServiceCollection()
@@ -99,10 +99,8 @@
                 });
 
             services.AddSingleton<IConfiguration>(configuration);
-            services.AddSingleton(provider =>
-            {
-                return provider.GetRequiredService<IConfiguration>().Get<WalrusConfig>();
-            });
+            services.AddSingleton(p => p.GetRequiredService<IConfiguration>().Get<WalrusConfig>() ??
+                                              WalrusConfig.Default);
             services.AddTransient<IWalrusService, WalrusService>();
 
             services.AddCliCommands();

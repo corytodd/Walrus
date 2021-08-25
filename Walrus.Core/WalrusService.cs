@@ -75,7 +75,7 @@
             
             if (searchPaths is null) 
             {
-                _logger.LogWarning("No repository roots are configured check your configuration file");
+                _logger.LogWarning("No repository search paths were specified");
 
                 yield break;
             }
