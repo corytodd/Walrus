@@ -17,7 +17,9 @@
         {
             if (--depth > 0)
             {
-                foreach (var directory in Directory.GetDirectories(root))
+                // If we need compat < net5.0 replace this with a try/catch around yet another generator
+                var options = new EnumerationOptions { IgnoreInaccessible = false };
+                foreach (var directory in Directory.GetDirectories(root, "*", options))
                 {
                     // Do not dig deeper into the repo if we have found a root
                     if (Repository.IsValid(directory))
