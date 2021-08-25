@@ -52,6 +52,11 @@
                 "Result grouping method"
             ));
 
+            Command.AddOption(new Option(
+                new []{"--current-directory", "-c"},
+                "Ignore configuration file roots and scan relative to current directory"
+                ));
+
             Command.Handler = CommandHandler.Create((WalrusQuery query) =>
             {
                 query.AddConfiguration(walrus.Config);

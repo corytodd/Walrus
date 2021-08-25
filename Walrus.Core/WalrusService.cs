@@ -2,7 +2,6 @@
 {
     using Microsoft.Extensions.Logging;
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using Walrus.Core.Internal;
@@ -19,7 +18,7 @@
         /// </summary>
         /// <param name="logger">Logging context</param>
         /// <param name="config">Service configuration</param>
-        public WalrusService(ILogger<WalrusConfig> logger, WalrusConfig config)
+        public WalrusService(ILogger<WalrusService> logger, WalrusConfig config)
         {
             Ensure.IsNotNull(nameof(logger), logger);
             Ensure.IsNotNull(nameof(config), config);
@@ -29,13 +28,15 @@
         }
 
         /// <inheritdoc />
-        public WalrusConfig Config { get; private set; }
+        public WalrusConfig Config { get; }
 
         /// <inheritdoc />
         public IEnumerable<CommitGroup> ExecuteQuery(WalrusQuery query)
         {
+            var searchRoot = query.CurrentDirectory ? Environment.CurrentDirectory : null;
+            
             var commits =
-                GetRepositories()
+                GetRepositories(searchRoot)
                     .Where(r => FilterRepo(r, query))
                     .AsParallel()
                     .Select(r => r.GetCommits(query))
@@ -68,16 +69,18 @@
 
 
         /// <inheritdoc />
-        public IEnumerable<WalrusRepository> GetRepositories()
+        public IEnumerable<WalrusRepository> GetRepositories(string? rootDirectory = null)
         {
-            if (Config.RepositoryRoots is null)
+            var searchPaths = string.IsNullOrEmpty(rootDirectory) ? Config.RepositoryRoots : new[] {rootDirectory};
+            
+            if (searchPaths is null) 
             {
-                _logger.LogWarning("No repository roots are configured. Check your configuration file.");
+                _logger.LogWarning("No repository roots are configured check your configuration file");
 
                 yield break;
             }
 
-            foreach (var root in Config.RepositoryRoots)
+            foreach (var root in searchPaths)
             {
                 var directories = Utilities.EnumerateDirectoriesToDepth(root, Config.DirectoryScanDepth);
 

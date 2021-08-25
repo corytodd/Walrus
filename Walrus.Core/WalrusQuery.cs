@@ -29,6 +29,11 @@
         /// Search all *local* branches
         /// </summary>
         public bool AllBranches { get; set; }
+        
+        /// <summary>
+        /// Search for repository from current directory
+        /// </summary>
+        public bool CurrentDirectory { get; set; }
 
         /// <summary>
         /// Restrict results to commits from this author
@@ -104,7 +109,10 @@
         /// <inheritdoc />
         public override string ToString()
         {
-            return $"After={After}, Before={Before}, AllBranches={AllBranches}, Repo={RepoName}, Author.Email={AuthorEmail}, Author.Alias={AuthorAlias}, Grouping={GroupBy}";
+            return $"After={After}, Before={Before}, AllBranches={AllBranches}, " +
+                   $"CurrentDirectory={CurrentDirectory}, Repo={RepoName}, " +
+                   $"Author.Email={AuthorEmail}, Author.Alias={AuthorAlias}, " +
+                   $"Grouping={GroupBy}";
         }
 
         public enum QueryGrouping
