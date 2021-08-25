@@ -104,7 +104,7 @@
         /// <inheritdoc />
         public override string ToString()
         {
-            return $"After={After}, Before={Before}, AllBranches={AllBranches}, Author.Email={AuthorEmail}, Author.Alias={AuthorAlias}, Grouping={GroupBy}";
+            return $"After={After}, Before={Before}, AllBranches={AllBranches}, Repo={RepoName}, Author.Email={AuthorEmail}, Author.Alias={AuthorAlias}, Grouping={GroupBy}";
         }
 
         public enum QueryGrouping
@@ -115,7 +115,7 @@
             Repo,
 
             /// <summary>
-            /// Group commits by date (specifcally by day)
+            /// Group commits by date (specifically by day)
             /// </summary>
             Date,
 
