@@ -24,5 +24,15 @@
         /// "some name" : { "email1@example.com", "email2@work.com" }
         /// </summary>
         public IDictionary<string, IList<string>>? AuthorAliases { get; set; }
+
+        /// <summary>
+        /// Generate a default configuration
+        /// </summary>
+        public static WalrusConfig Default => new()
+        {
+            DirectoryScanDepth = 3,
+            RepositoryRoots = null,
+            AuthorAliases = null
+        };
     }
 }

@@ -24,7 +24,9 @@
         /// <summary>
         /// Returns a list of all repositories that Walrus can see
         /// </summary>
+        /// <param name="rootDirectory">Optional directory to search. If null or empty,
+        /// <see cref="P:Config.RepositoryRoots"/> will be searched.</param>
         /// <returns>List of repositories</returns>
-        IEnumerable<WalrusRepository> GetRepositories();
+        IEnumerable<WalrusRepository> GetRepositories(string? rootDirectory = null);
     }
 }

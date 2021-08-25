@@ -19,8 +19,8 @@ This utility can be compiled and placed on your path. See `tools/publish.ps1` fo
 
 Alternatively (and recommended) you can use `dotnet tool` to create and install a global tool. See `tools/install_as_tool.ps1` for how to do this.
 
-You need a JSON config file to get started located at env `WALRUS_CONFIG_FILE` or in the same directory as the binary named `walrus.json`. 
-The contents should look something like this is:
+To query multiple roots or query from any location, you will need to setup a simple JSON config file. This can be specified as an env `WALRUS_CONFIG_FILE` or a file
+named `walrus.json` placed in your current working directory. The contents should look something like this is:
 
 ```
 {
@@ -52,6 +52,11 @@ walrusc show config
 Print a list of all repositories
 ```
 walrusc show repos
+```
+
+Use the default scan depth and search for repositories relative to your current directory
+```
+walrusc query --current-directory
 ```
   
 Count commits between March 2 and Jun 2 of 2021. This includes all authors on the currently checked out branch.
