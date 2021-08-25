@@ -86,6 +86,13 @@
             Console.WriteLine(new string('=', Console.WindowWidth / 2));
             Console.WriteLine("Total Commits: {0}", commitCount);
             Console.WriteLine(new string('=', Console.WindowWidth / 2));
+
+            // Show a helpful message if no commits are found and no roots are configured.
+            if (commitCount == 0 && Walrus.Config.RepositoryRoots is null)
+            {
+                Console.WriteLine("No commits matching your query were found and no search roots are configured. " +
+                                  "Try scanning with --current-directory or read the docs on env WALRUS_CONFIG_FILE");
+            }
         }
 
 
