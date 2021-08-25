@@ -20,34 +20,35 @@
             _logger = logger;
 
             Command.AddOption(new Option<DateTime>(
-                "--after",
+                new[] {"--after", "-a"},
                 () => DateTime.Now.AddDays(-7),
                 "Return commits on or after this date. Defaults to one week ago."));
 
             Command.AddOption(new Option<DateTime>(
-                "--before",
+                new[] {"--before", "-b"},
                 () => DateTime.Now.AddDays(1),
                 "Return commits before this date. Defaults to tomorrow."));
 
+            // All branches is slow so no short alias will be provided
             Command.AddOption(new Option(
                 "--all-branches",
                 "Include all *local* branches in search"
             ));
 
             Command.AddOption(new Option<string>(
-                "--author-email",
+                new[] {"--author-email", "-e"},
                 "Return commits from this author. Takes precendence over --author-alias."));
 
             Command.AddOption(new Option<string>(
-                "--author-alias",
+                new[] {"--author-alias", "-u"},
                 "Return commits from any alias of this author"));
 
             Command.AddOption(new Option<string>(
-                "--repo-name",
+                new[] {"--repo-name", "-r"},
                 "Return commits from this repository. Case insensitive."));
 
             Command.AddOption(new Option<WalrusQuery.QueryGrouping>(
-                "--group-by",
+                new[] {"--group-by", "-g"},
                 "Result grouping method"
             ));
 
@@ -71,7 +72,7 @@
         /// <param name="query">Query to execute</param>
         private void HandleQuery(WalrusQuery query)
         {
-            _logger.LogDebug("HandleQuery: {query}", query);
+            _logger.LogDebug("HandleQuery: {Query}", query);
 
             var commits = Walrus.ExecuteQuery(query);
 
