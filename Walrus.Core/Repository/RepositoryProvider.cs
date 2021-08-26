@@ -31,11 +31,11 @@
         }
 
         /// <summary>
-        ///     Returns list of all commits in this repo that satisfy the query
+        ///     Returns list of all commits in this repo
         /// </summary>
         /// <param name="repo">Repo to get commits from</param>
         /// <param name="allBranches">True to include commits from all local branches</param>
-        /// <returns>List of matching commits</returns>
+        /// <returns>List of commits in this repo</returns>
         private static IEnumerable<WalrusCommit> GetCommits(IRepository repo, bool allBranches)
         {
             Ensure.IsNotNull(nameof(repo), repo);
@@ -80,7 +80,7 @@
         /// </summary>
         /// <param name="repository">Repository to get commits from</param>
         /// <param name="branchIterator">List of branches and their respective commit iterators</param>
-        /// <returns>Commits that satisfy filter</returns>
+        /// <returns>List of commits in this repo</returns>
         private static IEnumerable<WalrusCommit> SafeGitCommitEnumeration(IRepository repository,
             (string, IEnumerator<Commit>) branchIterator)
         {

@@ -5,6 +5,7 @@
 
     /// <summary>
     ///     Repo provider for unit tests
+    ///     Provides a constant set of repos and commits to test against
     /// </summary>
     public class MockRepoProvider : IRepositoryProvider
     {
