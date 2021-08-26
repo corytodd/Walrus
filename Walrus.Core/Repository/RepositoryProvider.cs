@@ -15,6 +15,7 @@
         /// <inheritdoc />
         public IEnumerable<WalrusRepository> GetRepositories(string rootDirectory, int scanDepth, bool allBranches)
         {
+            Ensure.IsValid(nameof(rootDirectory), !string.IsNullOrEmpty(rootDirectory));
             Ensure.IsValid(nameof(scanDepth), scanDepth >= 0);
 
             var directories = Utilities.EnumerateDirectoriesToDepth(rootDirectory, scanDepth);
@@ -39,7 +40,7 @@
         {
             Ensure.IsNotNull(nameof(repo), repo);
 
-            // List of tuple(branch name, commit iterator)
+            // List of tuple(branch name, commit iterator), assume no more than 32 branches
             var iterators = new List<(string, IEnumerator<Commit>)>(32);
 
             if (allBranches)
@@ -86,8 +87,6 @@
             do
             {
                 var (branchName, iter) = branchIterator;
-                var repoPath = repository.Info.WorkingDirectory!;
-                var repoName = Path.GetFileName(Path.GetDirectoryName(repoPath))!;
 
                 try
                 {
@@ -104,6 +103,9 @@
                     break;
                 }
 
+                var repoPath = repository.Info.WorkingDirectory!;
+                var repoName = Path.GetFileName(Path.GetDirectoryName(repoPath))!;
+                
                 var commit = iter.Current;
                 yield return new WalrusCommit
                 {
