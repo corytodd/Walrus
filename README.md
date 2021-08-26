@@ -4,20 +4,18 @@ A multi-repo Git query tool
 
 ## Purpose
 
-I spend a lot of time tracking down what and when I did on a certain day. Usually this spans many (10+) repositories which means the task is boring and tedious. This 
+I spend a fair amount of time tracking down the what and when of my daily activities. Usually this searching spans many (10+) repositories which means the task is boring and tedious. Walrus 
 tool aims to automate the discovery of git commits based on date, author, and other criteria. 
 
 ## Goals
 
-We don't want to reinvent libgit2sharp, we just want a nice query interface specific to commit messages. We don't care about diffs, code content, or even the changesets.
-For this reason, Gitbase was found to be entirely overkill. It is a fantastic tool and I do make use of it but managing it is kind of a pain. For this reason, the 
+We don't want to reinvent libgit2sharp, we just want a simple query interface specific to commit messages. We don't care about diffs, code content, or even the change sets.
+For this reason, Gitbase was found to be entirely overkill even though it is pretty rad. It is a fantastic tool and I do make use of it but managing it is kind of a pain. For this reason, the 
 overarching goal of this project is simplicity with the ability to opt-in to complexity when needed.
 
 ## Getting Started
 
-This utility can be compiled and placed on your path. See `tools/publish.ps1` for how to build a minimal binary.
-
-Alternatively (and recommended) you can use `dotnet tool` to create and install a global tool. See `tools/install_as_tool.ps1` for how to do this.
+This utility should be used as a dotnet tool. See `tools/install_as_tool.ps1` for how to build and install Walrus on your system.
 
 To query multiple roots or query from any location, you will need to setup a simple JSON config file. This can be specified as an env `WALRUS_CONFIG_FILE` or a file
 named `walrus.json` placed in your current working directory. The contents should look something like this is:
@@ -37,12 +35,12 @@ named `walrus.json` placed in your current working directory. The contents shoul
 }
 ```
 
-If you like to keep a flat code directory then you can set `DirectoryScanDepth` to a smaller value.
+If you like to keep a flat code directories then you can set `DirectoryScanDepth` to a smaller value. This value affects performance so chose carefully.
 
 
 ## Examples
 
-These example assume you have install Walrus.CLI as a `dotnet tool`.
+These examples assume you have installed Walrus.CLI as a `dotnet tool`.
 
 Show the active configuration
 ```
@@ -54,23 +52,23 @@ Print a list of all repositories
 walrusc show repos
 ```
 
-Use the default scan depth and search for repositories relative to your current directory
+Use the default scan depth and search for repositories relative to your current directory. No config file needed!
 ```
 walrusc query --current-directory
 ```
   
-Count commits between March 2 and Jun 2 of 2021. This includes all authors on the currently checked out branch.
+Count commits between March 2 and Jun 2 of 2021. This includes all authors on the currently checked out branch in each repository
 ```
 walrusc query --after "Mar 2 2021" --before "Jun 2 2021"
 ```
   
 
-Count commits on all branches since last week (default if --after is not specified) and restrict to a single author.
+Show all commits on all branches since last week (default if --after is not specified) and restrict to a single author
 ```
 walrusc query --all-branches --author-email cory@email.com
 ```
 
-Print commit summary by repo and date to the console.
+Print a commit summary table organized by repo and date to the console
 ```
 walrusc query --author-email cory@email.com --group-by repo
 
@@ -120,8 +118,10 @@ walrusc query --author-alias illyum
 
 ## Roadmap
 
-- [x] Basic date/author query interface 
+- [x] Basic date/author query interface
+- [x] Unit tests
 - [x] Simple CLI 
 - [x] Table style CLI output
 - [x] Create dotnet tool
+- [ ] CI tests  
 - [ ] Calendar style GUI 
