@@ -9,6 +9,7 @@
     using System.CommandLine.Parsing;
     using System.IO;
     using System.Threading.Tasks;
+    using Microsoft.Extensions.Logging.Abstractions;
     using Walrus.Core;
 
     class Program
@@ -85,7 +86,7 @@
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile(configFile, optional: true)
                 .Build();
-
+            
             var services = new ServiceCollection()
                 .AddLogging(configure =>
                 {

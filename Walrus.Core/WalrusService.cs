@@ -11,7 +11,7 @@
     /// </summary>
     public class WalrusService : IWalrusService
     {
-        private ILogger _logger;
+        private readonly ILogger _logger;
 
         /// <summary>
         /// Create a new WalrusService
@@ -33,6 +33,8 @@
         /// <inheritdoc />
         public IEnumerable<CommitGroup> ExecuteQuery(WalrusQuery query)
         {
+            Ensure.IsNotNull(nameof(query), query);
+            
             var searchRoot = query.CurrentDirectory ? Environment.CurrentDirectory : null;
             
             var commits =
