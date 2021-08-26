@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using Repository;
 
     /// <summary>
     /// Walrus service provides access to system Git repositories
@@ -19,16 +20,14 @@
         /// <param name="query">Query to run</param>
         /// <returns>Resulting commit</returns>
         /// <exception cref="ArgumentOutOfRangeException">Raised if query grouping method is invalid</exception>
-        IEnumerable<CommitGroup> ExecuteQuery(WalrusQuery query);
+        IEnumerable<CommitGroup> QueryCommits(WalrusQuery query);
 
         /// <summary>
         /// Returns a list of all repositories that Walrus can see
         /// </summary>
-        /// <param name="rootDirectory">Directory to search for Git repositories. If null or empty
-        ///     <see cref="P:Config.RepositoryRoots"/> will be searched.</param>
-        /// <param name="allBranches">True to include all branches in commit listing for each repo</param>
+        /// <param name="query">Repos</param>
         /// <returns>List of repositories</returns>
-        IEnumerable<WalrusRepository> GetAllRepositories(string? rootDirectory, bool allBranches);
+        IEnumerable<WalrusRepository> QueryRepositories(WalrusQuery? query = null);
 
     }
 }

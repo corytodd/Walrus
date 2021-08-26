@@ -30,7 +30,7 @@
 
             // Execute
             var service = new WalrusService(logger, repoProvider, config);
-            var commits = service.ExecuteQuery(query);
+            var commits = service.QueryCommits(query);
 
             // Assert
             Assert.NotEmpty(commits);
@@ -56,7 +56,7 @@
 
             // Execute
             var service = new WalrusService(logger, repoProvider, config);
-            var commits = service.ExecuteQuery(query).ToList();
+            var commits = service.QueryCommits(query).ToList();
 
             // Assert
             Assert.NotEmpty(commits);
@@ -84,7 +84,7 @@
 
             // Execute
             var service = new WalrusService(logger, repoProvider, config);
-            var commits = service.ExecuteQuery(query).ToList();
+            var commits = service.QueryCommits(query).ToList();
 
             // Assert
             Assert.NotEmpty(commits);
@@ -112,7 +112,7 @@
 
             // Execute
             var service = new WalrusService(logger, repoProvider, config);
-            var commits = service.ExecuteQuery(query).ToList();
+            var commits = service.QueryCommits(query).ToList();
 
             // Assert
             Assert.NotEmpty(commits);
@@ -142,7 +142,7 @@
             var service = new WalrusService(logger, repoProvider, config);
 
             // Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => service.ExecuteQuery(query));
+            Assert.Throws<ArgumentOutOfRangeException>(() => service.QueryCommits(query));
         }
 
         /// <summary>
@@ -166,7 +166,7 @@
 
             // Execute
             var service = new WalrusService(logger, repoProvider, config);
-            var commits = service.ExecuteQuery(query).ToList();
+            var commits = service.QueryCommits(query).ToList();
 
             // Assert
             Assert.NotEmpty(commits);
@@ -196,7 +196,7 @@
 
             // Execute
             var service = new WalrusService(logger, repoProvider, config);
-            var commits = service.ExecuteQuery(query).ToList();
+            var commits = service.QueryCommits(query).ToList();
 
             // Assert
             Assert.NotEmpty(commits);
@@ -229,11 +229,10 @@
                 GroupBy = WalrusQuery.QueryGrouping.Author,
                 AuthorAlias = "test"
             };
-            query.AddConfiguration(config);
 
             // Execute
             var service = new WalrusService(logger, repoProvider, config);
-            var commits = service.ExecuteQuery(query).ToList();
+            var commits = service.QueryCommits(query).ToList();
 
             // Assert
             Assert.NotEmpty(commits);

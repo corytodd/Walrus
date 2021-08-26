@@ -1,6 +1,7 @@
 ﻿namespace Walrus.Core.Tests
 {
     using System.Collections.Generic;
+    using Repository;
 
     /// <summary>
     /// Repo provider for unit tests

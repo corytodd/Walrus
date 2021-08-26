@@ -20,7 +20,7 @@
 
             // Execute
             var service = new WalrusService(logger, repoProvider, config);
-            var repos = service.GetAllRepositories(null, false).ToList();
+            var repos = service.QueryRepositories().ToList();
 
             // Assert
             Assert.Empty(repos);
@@ -36,10 +36,11 @@
             var logger = new NullLogger<WalrusService>();
             var repoProvider = new MockRepoProvider();
             var config = WalrusConfig.Default;
+            var query = new WalrusQuery {CurrentDirectory = true};
 
             // Execute
             var service = new WalrusService(logger, repoProvider, config);
-            var repos = service.GetAllRepositories("test", false).ToList();
+            var repos = service.QueryRepositories(query).ToList();
 
             // Assert
             Assert.NotEmpty(repos);
@@ -58,10 +59,11 @@
             var logger = new NullLogger<WalrusService>();
             var repoProvider = new MockRepoProvider();
             var config = WalrusConfig.Default;
+            var query = new WalrusQuery {CurrentDirectory = true};
 
             // Execute
             var service = new WalrusService(logger, repoProvider, config);
-            var repos = service.GetAllRepositories("test", false).ToList();
+            var repos = service.QueryRepositories(query).ToList();
             var commits = repos.SelectMany(r => r.Commits).ToList();
 
             // Assert

@@ -54,27 +54,7 @@ namespace Walrus.Core.Tests
             // Assert
             Assert.Throws<ArgumentNullException>(() => new WalrusService(logger, repoProvider, null));
         }
-
-
-        /// <summary>
-        /// Assert that query parameters are validated
-        /// </summary>
-        [Fact]
-        public void QueryRequired()
-        {
-            // Setup
-            var logger = new NullLogger<WalrusService>();
-            var repoProvider = new MockRepoProvider();
-            var config = WalrusConfig.Default;
-
-            // Execute
-            var service = new WalrusService(logger, repoProvider, config);
-
-            // Assert
-            Assert.Throws<ArgumentNullException>(() => service.ExecuteQuery(null));
-        }
-
-
+        
         /// <summary>
         /// Assert that configuration is captured
         /// </summary>

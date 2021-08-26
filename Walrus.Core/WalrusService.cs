@@ -4,6 +4,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Repository;
     using Walrus.Core.Internal;
 
     /// <summary>
@@ -20,7 +21,8 @@
         /// <param name="logger">Logging context</param>
         /// <param name="repositoryProvider">Repository provider</param>
         /// <param name="config">Service configuration</param>
-        public WalrusService(ILogger<WalrusService> logger, IRepositoryProvider repositoryProvider, IWalrusConfig config)
+        public WalrusService(ILogger<WalrusService> logger, IRepositoryProvider repositoryProvider,
+            IWalrusConfig config)
         {
             Ensure.IsNotNull(nameof(logger), logger);
             Ensure.IsNotNull(nameof(repositoryProvider), repositoryProvider);
@@ -35,17 +37,16 @@
         public IWalrusConfig Config { get; }
 
         /// <inheritdoc />
-        public IEnumerable<CommitGroup> ExecuteQuery(WalrusQuery query)
+        public IEnumerable<CommitGroup> QueryCommits(WalrusQuery query)
         {
             Ensure.IsNotNull(nameof(query), query);
 
-            var searchRoot = query.CurrentDirectory ? Environment.CurrentDirectory : null;
+            var preparedQuery = new PreparedWalrusQuery(query, Config);
 
             var commits =
-                GetAllRepositories(searchRoot, query.AllBranches)
-                    .Where(r => FilterRepo(r, query))
+                QueryRepositories(query)
                     .AsParallel()
-                    .SelectMany(r => r.Commits.Where(query.IsMatch));
+                    .SelectMany(r => r.Commits.Where(preparedQuery.IsMatch));
 
             // Wrap GroupBy in a CommitGroup so we can have keys of different types
             var grouped = query.GroupBy switch
@@ -66,7 +67,7 @@
                     .Select(g => new CommitGroup(g.Key,
                         g.OrderBy(c => c.Timestamp))),
 
-                _ => throw new ArgumentOutOfRangeException(nameof(query.GroupBy))
+                _ => throw new ArgumentOutOfRangeException(nameof(query))
             };
 
             return grouped;
@@ -74,37 +75,38 @@
 
 
         /// <inheritdoc />
-        public IEnumerable<WalrusRepository> GetAllRepositories(string? rootDirectory = null, bool allBranches = false)
+        public IEnumerable<WalrusRepository> QueryRepositories(WalrusQuery? query = null)
         {
-            var searchPaths = string.IsNullOrEmpty(rootDirectory) ? Config.RepositoryRoots : new[] {rootDirectory};
+            query ??= new WalrusQuery();
+            var preparedQuery = new PreparedWalrusQuery(query, Config);
+            return QueryRepositories(preparedQuery);
+        }
 
-            if (searchPaths is null)
+        /// <summary>
+        /// Executes prepared query to fetch all matching repositories
+        /// </summary>
+        /// <param name="query">Query to execute</param>
+        /// <returns>List of repositories satisfying query</returns>
+        private IEnumerable<WalrusRepository> QueryRepositories(PreparedWalrusQuery query)
+        {
+            if (query.SearchPaths is null)
             {
                 _logger.LogWarning("No repository search paths were specified");
 
                 yield break;
             }
 
-            foreach (var root in searchPaths)
+            foreach (var root in query.SearchPaths)
             {
-                foreach (var repo in _repositoryProvider.GetRepositories(root, Config.DirectoryScanDepth, allBranches))
+                var repositories = _repositoryProvider
+                    .GetRepositories(root, Config.DirectoryScanDepth, query.AllBranches)
+                    .Where(query.IsMatch);
+
+                foreach (var repo in repositories)
                 {
                     yield return repo;
                 }
             }
-        }
-
-        /// <summary>
-        /// Returns true if repository should be included in query
-        /// </summary>
-        /// <param name="repository">Repository to test</param>
-        /// <param name="query">Query parameters</param>
-        /// <returns>True if filter should be included</returns>
-        private static bool FilterRepo(WalrusRepository repository, WalrusQuery query)
-        {
-            var b = string.IsNullOrEmpty(query.RepoName) ||
-                   repository.RepositoryName.Equals(query.RepoName, StringComparison.CurrentCultureIgnoreCase);
-            return b;
         }
     }
 }
