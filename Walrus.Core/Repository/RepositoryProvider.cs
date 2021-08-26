@@ -22,7 +22,12 @@
 
             foreach (var repo in Utilities.GetValidRepositories(directories))
             {
-                var repoPath = repo.Info.WorkingDirectory;
+                // Bare repos do not set working directory, fallback to path
+                var repoPath = repo.Info.WorkingDirectory ?? repo.Info.Path;
+
+                // If neither the path or the working directory are set
+                Ensure.IsValid(nameof(repoPath), !string.IsNullOrEmpty(repoPath), "Expected a valid repo path to be set. This is a bug.");
+                
                 var commits = GetCommits(repo, allBranches);
 
                 var repository = new WalrusRepository(repoPath, commits);
