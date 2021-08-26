@@ -28,17 +28,11 @@
             {
                 new Command("config", "Show configuration")
                 {
-                    Handler = CommandHandler.Create(() =>
-                    {
-                        ShowConfig();
-                    })
+                    Handler = CommandHandler.Create(ShowConfig)
                 },
                 new Command("repos", "Show known repositories")
                 {
-                    Handler = CommandHandler.Create(() =>
-                    {
-                        ShowRepositories();
-                    })
+                    Handler = CommandHandler.Create(ShowRepositories)
                 },
             };
 
@@ -73,8 +67,8 @@
         private void ShowRepositories()
         {
             _logger.LogDebug("ShowRepositories");
-
-            var repos = Walrus.GetRepositories();
+            
+            var repos = Walrus.GetAllRepositories(null, false);
             var count = 0;
             foreach (var repo in repos)
             {

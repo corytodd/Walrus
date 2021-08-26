@@ -1,6 +1,5 @@
 ﻿namespace Walrus.Core
 {
-    using LibGit2Sharp;
     using System;
     using System.Collections.Generic;
     using Walrus.Core.Internal;
@@ -62,7 +61,7 @@
         /// - the user alias feature.
         /// </summary>
         /// <param name="config">Service configuration</param>
-        public void AddConfiguration(WalrusConfig config)
+        public void AddConfiguration(IWalrusConfig config)
         {
             Ensure.IsNotNull(nameof(config), config);
 
@@ -77,21 +76,21 @@
         /// </summary>
         /// <param name="commit">Commit to test</param>
         /// <returns>True if commit satisfies this query</returns>
-        public bool IsMatch(Commit commit)
+        public bool IsMatch(WalrusCommit commit)
         {
             var isMatch = true;
 
             // Direct email (non-alias) takes precedence over aliases
             if (!string.IsNullOrEmpty(AuthorEmail))
             {
-                isMatch = commit.Author.Email == AuthorEmail;
+                isMatch = commit.AuthorEmail == AuthorEmail;
             }
             else if (_aliasEmails is not null)
             {
-                isMatch = _aliasEmails.Contains(commit.Author.Email);
+                isMatch = _aliasEmails.Contains(commit.AuthorEmail);
             }
 
-            return isMatch && commit.Author.When >= After && commit.Author.When < Before;
+            return isMatch && commit.Timestamp >= After && commit.Timestamp < Before;
         }
 
         /// <summary>
@@ -99,7 +98,7 @@
         /// </summary>
         /// <param name="config">Configuration to check</param>
         /// <returns>True if the query should check for email aliases</returns>
-        private bool HasMatchingAliasMap(WalrusConfig config)
+        private bool HasMatchingAliasMap(IWalrusConfig config)
         {
             return !string.IsNullOrEmpty(AuthorAlias) &&
                 config.AuthorAliases is not null &&

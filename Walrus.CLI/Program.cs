@@ -9,7 +9,6 @@
     using System.CommandLine.Parsing;
     using System.IO;
     using System.Threading.Tasks;
-    using Microsoft.Extensions.Logging.Abstractions;
     using Walrus.Core;
 
     class Program
@@ -100,8 +99,9 @@
                 });
 
             services.AddSingleton<IConfiguration>(configuration);
-            services.AddSingleton(p => p.GetRequiredService<IConfiguration>().Get<WalrusConfig>() ??
+            services.AddSingleton<IWalrusConfig>(p => p.GetRequiredService<IConfiguration>().Get<WalrusConfig>() ??
                                               WalrusConfig.Default);
+            services.AddTransient<IRepositoryProvider, RepositoryProvider>();
             services.AddTransient<IWalrusService, WalrusService>();
 
             services.AddCliCommands();
