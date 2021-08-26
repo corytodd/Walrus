@@ -85,7 +85,7 @@
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile(configFile, optional: true)
                 .Build();
-
+            
             var services = new ServiceCollection()
                 .AddLogging(configure =>
                 {
@@ -99,8 +99,9 @@
                 });
 
             services.AddSingleton<IConfiguration>(configuration);
-            services.AddSingleton(p => p.GetRequiredService<IConfiguration>().Get<WalrusConfig>() ??
+            services.AddSingleton<IWalrusConfig>(p => p.GetRequiredService<IConfiguration>().Get<WalrusConfig>() ??
                                               WalrusConfig.Default);
+            services.AddTransient<IRepositoryProvider, RepositoryProvider>();
             services.AddTransient<IWalrusService, WalrusService>();
 
             services.AddCliCommands();

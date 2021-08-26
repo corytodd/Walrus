@@ -4,15 +4,15 @@
     using System.Collections.Generic;
 
     /// <summary>
-    /// Warus service provides access to system Git repositories
+    /// Walrus service provides access to system Git repositories
     /// </summary>
     public interface IWalrusService
     {
         /// <summary>
         /// Active configuration
         /// </summary>
-        WalrusConfig Config { get; }
-
+        IWalrusConfig Config { get; }
+        
         /// <summary>
         /// Executes the specified query
         /// </summary>
@@ -24,9 +24,11 @@
         /// <summary>
         /// Returns a list of all repositories that Walrus can see
         /// </summary>
-        /// <param name="rootDirectory">Optional directory to search. If null or empty,
-        /// <see cref="P:Config.RepositoryRoots"/> will be searched.</param>
+        /// <param name="rootDirectory">Directory to search for Git repositories. If null or empty
+        ///     <see cref="P:Config.RepositoryRoots"/> will be searched.</param>
+        /// <param name="allBranches">True to include all branches in commit listing for each repo</param>
         /// <returns>List of repositories</returns>
-        IEnumerable<WalrusRepository> GetRepositories(string? rootDirectory = null);
+        IEnumerable<WalrusRepository> GetAllRepositories(string? rootDirectory, bool allBranches);
+
     }
 }

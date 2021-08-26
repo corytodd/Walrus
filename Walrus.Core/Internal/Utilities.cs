@@ -42,7 +42,7 @@
         /// </summary>
         /// <param name="directories">Directories to filter</param>
         /// <returns>List of valid Git repositories</returns>
-        public static IEnumerable<Repository> GetValidRepositories(IEnumerable<string> directories)
+        public static IEnumerable<IRepository> GetValidRepositories(IEnumerable<string> directories)
         {
             foreach (var directory in directories)
             {

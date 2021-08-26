@@ -59,6 +59,7 @@
 
             Command.Handler = CommandHandler.Create((WalrusQuery query) =>
             {
+                // Inject config into the query so we can resolve user aliases
                 query.AddConfiguration(walrus.Config);
 
                 HandleQuery(query);

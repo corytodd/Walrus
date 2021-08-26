@@ -30,6 +30,6 @@
         public abstract string Description { get; }
 
         /// <inheritdoc />
-        public Command Command { get; private set; }
+        public Command Command { get; }
     }
 }
