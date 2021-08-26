@@ -1,22 +1,23 @@
 ﻿namespace Walrus.CLI
 {
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
     using System;
     using System.CommandLine;
     using System.CommandLine.Builder;
     using System.CommandLine.Parsing;
     using System.IO;
     using System.Threading.Tasks;
-    using Walrus.Core;
+    using Core;
+    using Core.Repository;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
 
-    class Program
+    internal class Program
     {
         /// <summary>
-        /// Entry point
+        ///     Entry point
         /// </summary>
-        static async Task<int> Main(string[] args)
+        private static async Task<int> Main(string[] args)
         {
             try
             {
@@ -42,7 +43,7 @@
                 return 1;
             }
             catch (InvalidDataException ex)
-            {               
+            {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Write("ERROR: ");
                 Console.ResetColor();
@@ -51,13 +52,13 @@
                 return 1;
             }
         }
-        
+
         /// <summary>
-        /// Build command line parser utility to auto-discover all commands in this assembly
+        ///     Build command line parser utility to auto-discover all commands in this assembly
         /// </summary>
         /// <param name="serviceProvider">Hosting service</param>
         /// <returns>Command line parser</returns>
-        private static Parser BuildParser(ServiceProvider serviceProvider)
+        private static Parser BuildParser(IServiceProvider serviceProvider)
         {
             var rootCommand = new RootCommand
             {
@@ -76,16 +77,16 @@
         }
 
         /// <summary>
-        /// Setup DI and services
+        ///     Setup DI and services
         /// </summary>
         /// <returns></returns>
-        private static ServiceProvider ConfigureServices()
+        private static IServiceProvider ConfigureServices()
         {
             var configFile = Environment.GetEnvironmentVariable("WALRUS_CONFIG_FILE") ?? "walrus.json";
             var configuration = new ConfigurationBuilder()
-                .AddJsonFile(configFile, optional: true)
+                .AddJsonFile(configFile, true)
                 .Build();
-            
+
             var services = new ServiceCollection()
                 .AddLogging(configure =>
                 {
@@ -96,21 +97,16 @@
                     configure.SetMinimumLevel(LogLevel.Error);
 #endif
                     configure.AddConsole();
-                });
+                })
+                .AddSingleton<IConfiguration>(configuration)
+                .AddSingleton<IWalrusConfig>(p => p.GetRequiredService<IConfiguration>().Get<WalrusConfig>() ??
+                                                  WalrusConfig.Default)
+                .AddTransient<IRepositoryProvider, RepositoryProvider>()
+                .AddTransient<IWalrusService, WalrusService>()
+                .AddCliCommands();
 
-            services.AddSingleton<IConfiguration>(configuration);
-            services.AddSingleton<IWalrusConfig>(p => p.GetRequiredService<IConfiguration>().Get<WalrusConfig>() ??
-                                              WalrusConfig.Default);
-            services.AddTransient<IRepositoryProvider, RepositoryProvider>();
-            services.AddTransient<IWalrusService, WalrusService>();
-
-            services.AddCliCommands();
-
-            var provider = services.BuildServiceProvider();
-
-            provider.AddWalrusLogging();
-
-            return provider;
+            return services.BuildServiceProvider()
+                .AddWalrusLogging();
         }
     }
 }

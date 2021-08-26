@@ -7,12 +7,12 @@
     using Xunit;
 
     /// <summary>
-    /// Test repository queries
+    ///     Test repository queries
     /// </summary>
     public class WalrusServiceRepositoryQueryTests
     {
         /// <summary>
-        /// Test that query returns expected values
+        ///     Test that query returns expected values
         /// </summary>
         [Fact]
         public void QueryDefault()
@@ -37,7 +37,7 @@
         }
 
         /// <summary>
-        /// Test that query returns expected values when grouped by date
+        ///     Test that query returns expected values when grouped by date
         /// </summary>
         [Fact]
         public void QueryGroupByDate()
@@ -65,7 +65,7 @@
         }
 
         /// <summary>
-        /// Test that query returns expected values when grouped by repo
+        ///     Test that query returns expected values when grouped by repo
         /// </summary>
         [Fact]
         public void QueryGroupByRepo()
@@ -93,7 +93,7 @@
         }
 
         /// <summary>
-        /// Test that query returns expected values when grouped by author
+        ///     Test that query returns expected values when grouped by author
         /// </summary>
         [Fact]
         public void QueryGroupByAuthor()
@@ -121,7 +121,7 @@
         }
 
         /// <summary>
-        /// Test that an invalid grouping throws an exception
+        ///     Test that an invalid grouping throws an exception
         /// </summary>
         [Fact]
         public void QueryGroupByInvalid()
@@ -146,7 +146,7 @@
         }
 
         /// <summary>
-        /// Test that querying and filtering by repo name works
+        ///     Test that querying and filtering by repo name works
         /// </summary>
         [Fact]
         public void QueryFilterByRepo()
@@ -176,7 +176,7 @@
         }
 
         /// <summary>
-        /// Test that querying and filtering by author works
+        ///     Test that querying and filtering by author works
         /// </summary>
         [Fact]
         public void QueryFilterByAuthor()
@@ -206,7 +206,7 @@
         }
 
         /// <summary>
-        /// Test that querying and filtering by author alias works
+        ///     Test that querying and filtering by author alias works
         /// </summary>
         [Fact]
         public void QueryFilterByAuthorAlias()
@@ -241,7 +241,7 @@
         }
 
         /// <summary>
-        /// Test that query has a useful ToString
+        ///     Test that query has a useful ToString
         /// </summary>
         [Fact]
         public void QueryToString()
@@ -256,7 +256,7 @@
                 GroupBy = WalrusQuery.QueryGrouping.Author,
                 AuthorAlias = "test"
             };
-            
+
             // Assert
             Assert.Contains("After", query.ToString());
         }

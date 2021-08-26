@@ -1,4 +1,4 @@
-﻿namespace Walrus.Core
+﻿namespace Walrus.Core.Repository
 {
     using System;
     using System.Collections.Generic;
@@ -8,7 +8,7 @@
     using Microsoft.Extensions.Logging;
 
     /// <summary>
-    /// Provides access to Git repositories on the file system
+    ///     Provides access to Git repositories on the file system
     /// </summary>
     public class RepositoryProvider : IRepositoryProvider
     {
@@ -30,7 +30,7 @@
         }
 
         /// <summary>
-        /// Returns list of all commits in this repo that satisfy the query
+        ///     Returns list of all commits in this repo that satisfy the query
         /// </summary>
         /// <param name="repo">Repo to get commits from</param>
         /// <param name="allBranches">True to include commits from all local branches</param>
@@ -44,6 +44,7 @@
 
             if (allBranches)
             {
+                // ReSharper disable once LoopCanBeConvertedToQuery - this is more legible
                 foreach (var branch in repo.Branches)
                 {
                     // Ignore remote branches because
@@ -62,6 +63,7 @@
                 iterators.Add((repo.Head.FriendlyName, repo.Commits.GetEnumerator()));
             }
 
+            // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator - this is debuggable
             foreach (var commitIter in iterators)
             {
                 foreach (var commit in SafeGitCommitEnumeration(repo, commitIter))
@@ -73,7 +75,7 @@
 
 
         /// <summary>
-        /// LibGit2Sharp Commits iterator seems a bit crashy so we'll manually iterate
+        ///     LibGit2Sharp Commits iterator seems a bit crashy so we'll manually iterate
         /// </summary>
         /// <param name="repository">Repository to get commits from</param>
         /// <param name="branchIterator">List of branches and their respective commit iterators</param>

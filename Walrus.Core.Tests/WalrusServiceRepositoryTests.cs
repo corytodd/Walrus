@@ -8,7 +8,7 @@
     public class WalrusServiceRepositoryTests
     {
         /// <summary>
-        /// Assert that when no search root is specified we get no results
+        ///     Assert that when no search root is specified we get no results
         /// </summary>
         [Fact]
         public void GetRepositoriesNoRoots()
@@ -27,7 +27,7 @@
         }
 
         /// <summary>
-        /// Assert that all fetched repositories have their properties set
+        ///     Assert that all fetched repositories have their properties set
         /// </summary>
         [Fact]
         public void GetRepositories()
@@ -50,7 +50,7 @@
         }
 
         /// <summary>
-        /// Assert that all fetched repositories have their properties set
+        ///     Assert that all fetched repositories have their properties set
         /// </summary>
         [Fact]
         public void GetCommitsRepositories()

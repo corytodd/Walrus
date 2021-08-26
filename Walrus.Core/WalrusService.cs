@@ -1,14 +1,14 @@
 ﻿namespace Walrus.Core
 {
-    using Microsoft.Extensions.Logging;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Internal;
+    using Microsoft.Extensions.Logging;
     using Repository;
-    using Walrus.Core.Internal;
 
     /// <summary>
-    /// Default Walrus service implementation provides access to Git repositories
+    ///     Default Walrus service implementation provides access to Git repositories
     /// </summary>
     public class WalrusService : IWalrusService
     {
@@ -16,7 +16,7 @@
         private readonly IRepositoryProvider _repositoryProvider;
 
         /// <summary>
-        /// Create a new WalrusService
+        ///     Create a new WalrusService
         /// </summary>
         /// <param name="logger">Logging context</param>
         /// <param name="repositoryProvider">Repository provider</param>
@@ -83,7 +83,7 @@
         }
 
         /// <summary>
-        /// Executes prepared query to fetch all matching repositories
+        ///     Executes prepared query to fetch all matching repositories
         /// </summary>
         /// <param name="query">Query to execute</param>
         /// <returns>List of repositories satisfying query</returns>

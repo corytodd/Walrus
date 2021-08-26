@@ -6,15 +6,18 @@
     using System.CommandLine.Invocation;
     using System.Linq;
     using Core;
+    using Core.Repository;
     using Microsoft.Extensions.Logging;
 
     /// <summary>
     ///     Query all Git repositories
     /// </summary>
+    // ReSharper disable once UnusedType.Global
     internal class QueryCommand : BaseCommand
     {
         private readonly ILogger _logger;
 
+        // ReSharper disable once SuggestBaseTypeForParameter - must use generic interface
         public QueryCommand(IWalrusService walrus, ILogger<QueryCommand> logger) : base(walrus)
         {
             _logger = logger;
@@ -37,7 +40,7 @@
 
             Command.AddOption(new Option<string>(
                 new[] {"--author-email", "-e"},
-                "Return commits from this author. Takes precendence over --author-alias."));
+                "Return commits from this author. Takes precedence over --author-alias."));
 
             Command.AddOption(new Option<string>(
                 new[] {"--author-alias", "-u"},
@@ -53,17 +56,11 @@
             ));
 
             Command.AddOption(new Option(
-                new []{"--current-directory", "-c"},
+                new[] {"--current-directory", "-c"},
                 "Ignore configuration file roots and scan relative to current directory"
-                ));
+            ));
 
-            Command.Handler = CommandHandler.Create((WalrusQuery query) =>
-            {
-                // Inject config into the query so we can resolve user aliases
-                query.AddConfiguration(walrus.Config);
-
-                HandleQuery(query);
-            });
+            Command.Handler = CommandHandler.Create((WalrusQuery query) => { HandleQuery(query); });
         }
 
         /// <inheritdoc />
@@ -80,7 +77,7 @@
         {
             _logger.LogDebug("HandleQuery: {Query}", query);
 
-            var commits = Walrus.ExecuteQuery(query);
+            var commits = Walrus.QueryCommits(query);
 
             var commitCount = PrintTable(commits, query);
 
@@ -113,7 +110,7 @@
                 WalrusQuery.QueryGrouping.Date => PrintByDate(commits),
                 WalrusQuery.QueryGrouping.Author => PrintByAuthor(commits),
 
-                _ => throw new ArgumentOutOfRangeException(nameof(query.GroupBy))
+                _ => throw new ArgumentOutOfRangeException(nameof(query))
             };
 
             return count;

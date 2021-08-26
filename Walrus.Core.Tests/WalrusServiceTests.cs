@@ -6,12 +6,12 @@ namespace Walrus.Core.Tests
     using Xunit;
 
     /// <summary>
-    /// Test service constructor and properties
+    ///     Test service constructor and properties
     /// </summary>
     public class WalrusServiceTests
     {
         /// <summary>
-        /// Assert that constructor parameters are validated
+        ///     Assert that constructor parameters are validated
         /// </summary>
         [Fact]
         public void LoggerRequired()
@@ -26,7 +26,7 @@ namespace Walrus.Core.Tests
         }
 
         /// <summary>
-        /// Assert that constructor parameters are validated
+        ///     Assert that constructor parameters are validated
         /// </summary>
         [Fact]
         public void RepoProviderRequired()
@@ -41,7 +41,7 @@ namespace Walrus.Core.Tests
         }
 
         /// <summary>
-        /// Assert that constructor parameters are validated
+        ///     Assert that constructor parameters are validated
         /// </summary>
         [Fact]
         public void ConfigRequired()
@@ -54,9 +54,9 @@ namespace Walrus.Core.Tests
             // Assert
             Assert.Throws<ArgumentNullException>(() => new WalrusService(logger, repoProvider, null));
         }
-        
+
         /// <summary>
-        /// Assert that configuration is captured
+        ///     Assert that configuration is captured
         /// </summary>
         [Fact]
         public void ConfigStored()

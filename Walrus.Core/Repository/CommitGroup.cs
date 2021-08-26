@@ -1,14 +1,14 @@
-﻿namespace Walrus.Core
+﻿namespace Walrus.Core.Repository
 {
     using System.Collections.Generic;
 
     /// <summary>
-    /// Query grouping wrapper allows for arbitrary key grouping
+    ///     Query grouping wrapper allows for arbitrary key grouping
     /// </summary>
     public class CommitGroup
     {
         /// <summary>
-        /// Create a new commit group
+        ///     Create a new commit group
         /// </summary>
         /// <param name="key">Group key</param>
         /// <param name="data">Commits</param>
@@ -19,12 +19,12 @@
         }
 
         /// <summary>
-        /// Grouping key
+        ///     Grouping key
         /// </summary>
         public object Key { get; }
 
         /// <summary>
-        /// Commits for this group
+        ///     Commits for this group
         /// </summary>
         public IEnumerable<WalrusCommit> Data { get; }
     }

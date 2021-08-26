@@ -1,16 +1,16 @@
-﻿namespace Walrus.Core
+﻿namespace Walrus.Core.Repository
 {
     using System.Collections.Generic;
     using System.IO;
-    using Walrus.Core.Internal;
+    using Internal;
 
     /// <summary>
-    /// Git repository
+    ///     Git repository
     /// </summary>
     public class WalrusRepository
     {
         /// <summary>
-        /// Create a new WalrusRepository based on a git repository
+        ///     Create a new WalrusRepository based on a git repository
         /// </summary>
         /// <param name="repositoryPath">Path to git repository</param>
         /// <param name="commits">Repository commits</param>
@@ -24,17 +24,17 @@
         }
 
         /// <summary>
-        /// Name of folder containing Git repo
+        ///     Name of folder containing Git repo
         /// </summary>
         public string RepositoryName { get; }
 
         /// <summary>
-        /// Absolute path to Git repo
+        ///     Absolute path to Git repo
         /// </summary>
         public string RepositoryPath { get; }
-        
+
         /// <summary>
-        /// All commits in this repository
+        ///     All commits in this repository
         /// </summary>
         public IEnumerable<WalrusCommit> Commits { get; }
     }

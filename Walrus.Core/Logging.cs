@@ -1,7 +1,9 @@
+// ReSharper disable UnusedMember.Global
+
 namespace Walrus.Core
 {
-    using Microsoft.Extensions.Logging;
     using System;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
     ///     Logging implementation that is framework agnostic
@@ -9,7 +11,7 @@ namespace Walrus.Core
     /// </summary>
     public static class WalrusLog
     {
-        private static readonly WalrusLogger WalrusLoggerImpl = new WalrusLogger();
+        private static readonly WalrusLogger WalrusLoggerImpl = new();
         public static ILogger Logger => WalrusLoggerImpl;
 
         public static ILoggerFactory LoggerFactory
@@ -48,20 +50,20 @@ namespace Walrus.Core
             /// <inheritdoc />
             IDisposable ILogger.BeginScope<TState>(TState state)
             {
-                return LoggerImpl?.BeginScope(state)!;
+                return LoggerImpl.BeginScope(state)!;
             }
 
             /// <inheritdoc />
             bool ILogger.IsEnabled(LogLevel logLevel)
             {
-                return LoggerImpl?.IsEnabled(logLevel) ?? false;
+                return LoggerImpl.IsEnabled(logLevel);
             }
 
             /// <inheritdoc />
             void ILogger.Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception,
                 Func<TState, Exception, string> formatter)
             {
-                LoggerImpl?.Log(logLevel, eventId, state, exception, formatter);
+                LoggerImpl.Log(logLevel, eventId, state, exception, formatter);
             }
         }
     }

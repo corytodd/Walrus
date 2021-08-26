@@ -1,15 +1,15 @@
 ﻿namespace Walrus.CLI.Commands
 {
     using System.CommandLine;
-    using Walrus.Core;
+    using Core;
 
     /// <summary>
-    /// Command command implementation
+    ///     Command command implementation
     /// </summary>
-    abstract class BaseCommand : IComposableCommand
+    internal abstract class BaseCommand : IComposableCommand
     {
         /// <summary>
-        /// Create a command
+        ///     Create a command
         /// </summary>
         /// <param name="walrus">Walrus service</param>
         protected BaseCommand(IWalrusService walrus)
@@ -19,7 +19,7 @@
         }
 
         /// <summary>
-        /// Walrus service context
+        ///     Walrus service context
         /// </summary>
         protected IWalrusService Walrus { get; }
 

@@ -4,7 +4,7 @@
     using Repository;
 
     /// <summary>
-    /// Repo provider for unit tests
+    ///     Repo provider for unit tests
     /// </summary>
     public class MockRepoProvider : IRepositoryProvider
     {

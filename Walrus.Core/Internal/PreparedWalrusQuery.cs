@@ -5,19 +5,19 @@
     using Repository;
 
     /// <summary>
-    /// Prepared and cached Walrus query
+    ///     Prepared and cached Walrus query
     /// </summary>
     internal class PreparedWalrusQuery
     {
-        private readonly WalrusQuery _query;
-
         /// <summary>
-        /// List of email addresses to filter commits on
+        ///     List of email addresses to filter commits on
         /// </summary>
         private readonly HashSet<string>? _aliasEmails;
 
+        private readonly WalrusQuery _query;
+
         /// <summary>
-        /// Prepare a new query
+        ///     Prepare a new query
         /// </summary>
         /// <param name="query">Query parameters</param>
         /// <param name="config">Service configuration</param>
@@ -32,23 +32,23 @@
             {
                 _aliasEmails = new HashSet<string>(config.AuthorAliases![_query.AuthorAlias!]);
             }
-            
+
             // If current directory is specified it will override the configured search roots
             SearchPaths = query.CurrentDirectory ? new[] {Environment.CurrentDirectory} : config.RepositoryRoots;
         }
 
         /// <summary>
-        /// Returns true if all local branches should be returned
+        ///     Returns true if all local branches should be returned
         /// </summary>
         public bool AllBranches => _query.AllBranches;
 
         /// <summary>
-        /// List of paths to search for repositories
+        ///     List of paths to search for repositories
         /// </summary>
         public IEnumerable<string>? SearchPaths { get; }
 
         /// <summary>
-        /// Returns true if commit satisfies this query
+        ///     Returns true if commit satisfies this query
         /// </summary>
         /// <param name="commit">Commit to test</param>
         /// <returns>True if commit satisfies this query</returns>
@@ -70,7 +70,7 @@
         }
 
         /// <summary>
-        /// Returns true if repository satisfies this query
+        ///     Returns true if repository satisfies this query
         /// </summary>
         /// <param name="repository">Repository to test</param>
         /// <returns>True if repository satisfies this query</returns>
@@ -81,7 +81,7 @@
         }
 
         /// <summary>
-        /// Returns true if this query matches an alias with an email mapping
+        ///     Returns true if this query matches an alias with an email mapping
         /// </summary>
         /// <param name="config">Configuration to check</param>
         /// <returns>True if the query should check for email aliases</returns>
