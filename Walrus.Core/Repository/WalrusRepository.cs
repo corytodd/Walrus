@@ -18,7 +18,7 @@
         {
             Ensure.IsValid(nameof(repositoryPath), !string.IsNullOrEmpty(repositoryPath));
 
-            RepositoryPath = Path.GetDirectoryName(repositoryPath)!;
+            RepositoryPath = repositoryPath;
             RepositoryName = Path.GetFileName(RepositoryPath)!;
             Commits = commits;
         }

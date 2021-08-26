@@ -44,6 +44,39 @@
                         RepoName = "project_1",
                         RepoPath = "/home/user/code/project_1"
                     }
+                }),
+                new WalrusRepository("/home/user/code/project_2", new[]
+                {
+                    new WalrusCommit
+                    {
+                        Branch = "main",
+                        Message = "[bugfix] fix issue #2252",
+                        Sha = "f47fb2990a0d9596e908a23a25e248b0b10a1f37",
+                        Timestamp = ConstantDateTimes.LastWeek,
+                        AuthorEmail = "test2@example.com",
+                        RepoName = "project_2",
+                        RepoPath = "/home/user/code/project_2"
+                    },
+                    new WalrusCommit
+                    {
+                        Branch = "main",
+                        Message = "[bugfix] revert fix for issue #2252",
+                        Sha = "515fec7ad07d728044271e7fa6a93a34217613b3",
+                        Timestamp = ConstantDateTimes.Yesterday,
+                        AuthorEmail = "test2@example.com",
+                        RepoName = "project_2",
+                        RepoPath = "/home/user/code/project_2"
+                    },
+                    new WalrusCommit
+                    {
+                        Branch = "main",
+                        Message = "[bugfix] really fix issue #2252",
+                        Sha = "0335f9a11ec0c5f83c0f412ed49e816f815d9089",
+                        Timestamp = ConstantDateTimes.Today,
+                        AuthorEmail = "test2@example.com",
+                        RepoName = "project_2",
+                        RepoPath = "/home/user/code/project_2"
+                    }
                 })
             };
         }
