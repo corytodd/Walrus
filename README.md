@@ -1,5 +1,7 @@
 # Walrus
 
+[![Test](https://github.com/corytodd/Walrus/actions/workflows/run_tests.yml/badge.svg)](https://github.com/corytodd/Walrus/actions/workflows/run_tests.yml)
+
 A multi-repo Git query tool
 
 ## Purpose
@@ -123,5 +125,5 @@ walrusc query --author-alias illyum
 - [x] Simple CLI 
 - [x] Table style CLI output
 - [x] Create dotnet tool
-- [ ] CI tests  
+- [x] CI tests  
 - [ ] Calendar style GUI 
