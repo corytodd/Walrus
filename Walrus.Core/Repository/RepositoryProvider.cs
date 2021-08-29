@@ -18,16 +18,19 @@
             Ensure.IsValid(nameof(rootDirectory), !string.IsNullOrEmpty(rootDirectory));
             Ensure.IsValid(nameof(scanDepth), scanDepth >= 0);
 
-            var directories = Utilities.EnumerateDirectoriesToDepth(rootDirectory, scanDepth);
+            var directories = Utilities.EnumerateGitDirectoriesToDepth(rootDirectory, scanDepth);
 
-            foreach (var repo in Utilities.GetValidRepositories(directories))
+            foreach (var directory in directories)
             {
+                Ensure.IsValid(nameof(directory), Repository.IsValid(directory), "There is a bug in EnumerateGitDirectoriesToDepth");
+                var repo = new Repository(directory);
+
                 // Bare repos do not set working directory, fallback to path
                 var repoPath = repo.Info.WorkingDirectory ?? repo.Info.Path;
 
                 // If neither the path or the working directory are set
                 Ensure.IsValid(nameof(repoPath), !string.IsNullOrEmpty(repoPath), "Expected a valid repo path to be set. This is a bug.");
-                
+
                 var commits = GetCommits(repo, allBranches);
 
                 var repository = new WalrusRepository(repoPath, commits);
@@ -110,7 +113,7 @@
 
                 var repoPath = repository.Info.WorkingDirectory!;
                 var repoName = Path.GetFileName(Path.GetDirectoryName(repoPath))!;
-                
+
                 var commit = iter.Current;
                 yield return new WalrusCommit
                 {
