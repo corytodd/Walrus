@@ -2,19 +2,18 @@
 {
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using LibGit2Sharp;
 
     internal static class Utilities
     {
         /// <summary>
-        ///     Returns a list of directories contained within the specified root directory
+        ///     Returns a list of Git directories contained within the specified root directory
         ///     and its children up to the specified depth.
         /// </summary>
         /// <param name="root">Starting directory</param>
         /// <param name="depth">Scan depth. Set to zero for top-level only.</param>
         /// <returns></returns>
-        public static IEnumerable<string> EnumerateDirectoriesToDepth(string root, int depth)
+        public static IEnumerable<string> EnumerateGitDirectoriesToDepth(string root, int depth)
         {
             if (--depth <= 0)
             {
@@ -32,24 +31,12 @@
                 }
                 else
                 {
-                    foreach (var subDirectory in EnumerateDirectoriesToDepth(directory, depth))
+                    foreach (var subDirectory in EnumerateGitDirectoriesToDepth(directory, depth))
                     {
                         yield return subDirectory;
                     }
                 }
             }
-        }
-
-        /// <summary>
-        ///     Filter and return only valid Git repositories from the specified directory list
-        /// </summary>
-        /// <param name="directories">Directories to filter</param>
-        /// <returns>List of valid Git repositories</returns>
-        public static IEnumerable<IRepository> GetValidRepositories(IEnumerable<string> directories)
-        {
-            return from directory in directories
-                where Repository.IsValid(directory)
-                select new Repository(directory);
         }
     }
 }
