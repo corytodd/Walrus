@@ -98,6 +98,8 @@
 
             foreach (var root in query.SearchPaths)
             {
+                _logger.LogDebug("Searching {Path}", root);
+
                 var repositories = _repositoryProvider
                     .GetRepositories(root, Config.DirectoryScanDepth, query.AllBranches)
                     .Where(query.IsMatch);

@@ -18,12 +18,18 @@ namespace Walrus.Core
         /// <summary>
         ///     List of repository roots to scan
         /// </summary>
-        IList<string>? RepositoryRoots { get; set; }
+        IList<string> RepositoryRoots { get; set; }
 
         /// <summary>
         ///     List of author aliases
         ///     "some name" : { "email1@example.com", "email2@work.com" }
         /// </summary>
         IDictionary<string, IList<string>>? AuthorAliases { get; set; }
+
+        /// <summary>
+        ///     Validates self or throws WalrusConfigurationException
+        /// </summary>
+        /// <exception cref="WalrusConfigurationException">Thrown if configuration is invalid</exception>
+        public void ValidateOrThrow();
     }
 }

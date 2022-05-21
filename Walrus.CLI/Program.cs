@@ -25,31 +25,31 @@
 
                 var parser = BuildParser(serviceProvider);
 
-                return await parser.InvokeAsync(args).ConfigureAwait(false);
+                return await parser
+                    .InvokeAsync(args)
+                    .ConfigureAwait(false);
             }
-            catch (FileNotFoundException ex)
+            catch(WalrusConfigurationException ex)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write("ERROR: ");
-                Console.ResetColor();
-                Console.WriteLine("Unable to find configuration file. " + Environment.NewLine +
-                                  "You can provide a configuration file in one of two ways: " + Environment.NewLine +
-                                  "1) Define an env named WALRUS_CONFIG_FILE that points to your configuration file" +
-                                  Environment.NewLine +
-                                  "2) Create a file named walrus.config in your current working directory" +
-                                  Environment.NewLine);
-                Console.WriteLine($"The original exception was: {ex.Message}");
+                WriteError("Your walrus config file is invalid", ex);
+                return -1;
+            }
+        }
 
-                return 1;
-            }
-            catch (InvalidDataException ex)
+        /// <summary>
+        /// Write error message to console in red
+        /// </summary>
+        /// <param name="message">Text to show</param>
+        /// <param name="ex">Original exception</param>
+        private static void WriteError(string message, Exception ex)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write("ERROR: ");
+            Console.ResetColor();
+            Console.WriteLine(message);
+            if(ex is not null)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write("ERROR: ");
-                Console.ResetColor();
-                Console.WriteLine("Your configuration file invalid JSON");
-                Console.WriteLine($"The original exception was: {ex.Message}");
-                return 1;
+                Console.WriteLine($"Details: {ex.Message}");
             }
         }
 
@@ -73,7 +73,42 @@
                 commandLineBuilder.AddCommand(command.Command);
             }
 
-            return commandLineBuilder.UseDefaults().Build();
+            return commandLineBuilder.UseDefaults()
+                .UseExceptionHandler((e, context) =>
+                {
+                    // Unwind to inner most exception
+                    var innerEx = e;
+                    while(innerEx.InnerException is not null){
+                        innerEx = innerEx.InnerException;
+                    }
+
+                    switch(innerEx)
+                    {
+                        case DirectoryNotFoundException dnfe:
+                            WriteError("One or more directories in your config file do not exist", dnfe);
+                            break;
+
+                        case FileNotFoundException fnfe:
+                            var message = "Unable to find configuration file. " + Environment.NewLine +
+                                          "You can provide a configuration file in one of two ways: " + Environment.NewLine +
+                                          "1) Define an env named WALRUS_CONFIG_FILE that points to your configuration file" +
+                                          Environment.NewLine +
+                                          "2) Create a file named walrus.config in your current working directory" +
+                                          Environment.NewLine;
+                            WriteError(message, fnfe);
+                            break;
+                        case InvalidDataException ide:
+                            WriteError("Your configuration file invalid JSON", ide);
+                            break;
+                        case Exception ex:
+                            WriteError("Exception", ex);
+                            break;
+                        default:
+                            WriteError("Unknown Error", null);
+                            break;
+                    }
+                })
+                .Build();
         }
 
         /// <summary>
@@ -83,6 +118,7 @@
         private static IServiceProvider ConfigureServices()
         {
             var configFile = Environment.GetEnvironmentVariable("WALRUS_CONFIG_FILE") ?? "walrus.json";
+            configFile = PathHelper.ResolvePath(configFile);
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile(configFile, true)
                 .Build();
@@ -99,8 +135,13 @@
                     configure.AddConsole();
                 })
                 .AddSingleton<IConfiguration>(configuration)
-                .AddSingleton<IWalrusConfig>(p => p.GetRequiredService<IConfiguration>().Get<WalrusConfig>() ??
-                                                  WalrusConfig.Default)
+                .AddSingleton<IWalrusConfig>(p => {
+                    // Load and validation user configuration
+                    var config = p.GetRequiredService<IConfiguration>().Get<WalrusConfig>() ??
+                                                  WalrusConfig.Default;
+                    config.ValidateOrThrow();
+                    return config;
+                })
                 .AddTransient<IRepositoryProvider, RepositoryProvider>()
                 .AddTransient<IWalrusService, WalrusService>()
                 .AddCliCommands();
