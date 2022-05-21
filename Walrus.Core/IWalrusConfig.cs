@@ -18,7 +18,7 @@ namespace Walrus.Core
         /// <summary>
         ///     List of repository roots to scan
         /// </summary>
-        IList<string>? RepositoryRoots { get; set; }
+        IList<string> RepositoryRoots { get; set; }
 
         /// <summary>
         ///     List of author aliases

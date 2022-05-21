@@ -1,6 +1,7 @@
 ﻿namespace Walrus.Core.Internal
 {
     using System;
+    using System.Linq;
     using System.Collections.Generic;
     using Repository;
 
@@ -34,7 +35,8 @@
             }
 
             // If current directory is specified it will override the configured search roots
-            SearchPaths = query.CurrentDirectory ? new[] {Environment.CurrentDirectory} : config.RepositoryRoots;
+            SearchPaths = (query.CurrentDirectory ? new[] {Environment.CurrentDirectory} : config.RepositoryRoots)
+                          .Select(p => PathHelper.ResolvePath(p));
         }
 
         /// <summary>

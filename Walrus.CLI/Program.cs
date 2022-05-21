@@ -19,7 +19,7 @@
         /// </summary>
         private static async Task<int> Main(string[] args)
         {
-            try 
+            try
             {
                 var serviceProvider = ConfigureServices();
 
@@ -76,14 +76,14 @@
             return commandLineBuilder.UseDefaults()
                 .UseExceptionHandler((e, context) =>
                 {
-                    // Unwind to inner mode exception
+                    // Unwind to inner most exception
                     var innerEx = e;
                     while(innerEx.InnerException is not null){
                         innerEx = innerEx.InnerException;
                     }
 
                     switch(innerEx)
-                    {        
+                    {
                         case DirectoryNotFoundException dnfe:
                             WriteError("One or more directories in your config file do not exist", dnfe);
                             break;
@@ -136,9 +136,10 @@
                 })
                 .AddSingleton<IConfiguration>(configuration)
                 .AddSingleton<IWalrusConfig>(p => {
+                    // Load and validation user configuration
                     var config = p.GetRequiredService<IConfiguration>().Get<WalrusConfig>() ??
                                                   WalrusConfig.Default;
-                    config.ValidateOrThrow();            
+                    config.ValidateOrThrow();
                     return config;
                 })
                 .AddTransient<IRepositoryProvider, RepositoryProvider>()

@@ -8,6 +8,7 @@ namespace Walrus.Core
     /// <summary>
     /// Path helper utilities
     /// </summary>
+    /// <remarks>Nested variables are not supported</remarks>
     public static class PathHelper
     {
         /// <summary>
@@ -34,7 +35,7 @@ namespace Walrus.Core
 
         /// <summary>
         /// Split path into components and resolve them if they're environmental
-        /// variables. It turns out Environment.ExpandEnvironmentVariables does 
+        /// variables. It turns out Environment.ExpandEnvironmentVariables does
         /// not support the $VAR syntax, only %VAR% syntax.
         /// </summary>
         private static string ResolveAllEnvironmentVariables(string path)
@@ -48,7 +49,7 @@ namespace Walrus.Core
                 {
                     var varName = part.Substring(1);
                     expanded = Environment.GetEnvironmentVariable(varName) ?? string.Empty;
-                } 
+                }
                 else if(part.StartsWith('%'))
                 {
                     expanded = Environment.ExpandEnvironmentVariables(part);
