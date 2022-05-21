@@ -1,6 +1,8 @@
 namespace Walrus.Core.Tests
 {
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
     using Xunit;
 
     /// <summary>
@@ -8,10 +10,48 @@ namespace Walrus.Core.Tests
     /// </summary>
     public class PathHelperTests
     {
+        /// <summary>
+        ///     Provides platform dependent paths for testing
+        /// </summary>
+        public class PathHelperTestData : IEnumerable<object[]>
+        {
+            public IEnumerator<object[]> GetEnumerator()
+            {
+                if (OperatingSystem.IsWindows())
+                {
+                    yield return new object[] { @"C:\absolute\path", @"C:\absolute\path" };
+                    yield return new object[] { "relative", "relative" };
+                    yield return new object[] { @"relative\path\to\boot", @"relative\path\to\boot" };
+                    yield return new object[] { @"relative\path\to\..\boot", @"relative\path\to\..\boot" };
+                    yield return new object[] { @"~/", @"C:\Users\user\" };
+                    yield return new object[] { @"~/%FOO%", @"C:\Users\user\foo" };
+                }
+                else
+                {
+                    yield return new object[] { "/absolute/path", "/absolute/path" };
+                    yield return new object[] { "relative", "relative" };
+                    yield return new object[] { "relative/path/to/boot", "relative/path/to/boot" };
+                    yield return new object[] { "relative/path/to/../boot", "relative/path/to/../boot" };
+                    yield return new object[] { "~/", "/home/user/" };
+                    yield return new object[] { "~/$FOO", "/home/user/foo" };
+                }
+            }
+
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        }
+
         public PathHelperTests()
         {
             // setup some env vars
-            Environment.SetEnvironmentVariable("HOME", "/home/user");
+            if (OperatingSystem.IsWindows())
+            {
+                Environment.SetEnvironmentVariable("HOME", @"C:\Users\user");
+            }
+            else
+            {
+                Environment.SetEnvironmentVariable("HOME", "/home/user");
+            }
+
             Environment.SetEnvironmentVariable("FOO", "foo");
         }
 
@@ -19,40 +59,8 @@ namespace Walrus.Core.Tests
         /// Assert that a path with no variables is not modified
         /// </summary>
         [Theory]
-        [InlineData("/absolute/path", "/absolute/path")]
-        [InlineData("relative", "relative")]
-        [InlineData("relative/path/to/boot", "relative/path/to/boot")]
-        [InlineData("relative/path/to/../boot", "relative/path/to/../boot")]
+        [ClassData(typeof(PathHelperTestData))]
         public void NoVariablesTest(string input, string expect)
-        {
-            // Execute
-            var resolved = PathHelper.ResolvePath(input);
-
-            // Assert
-            Assert.Equal(expect, resolved);
-        }
-
-        /// <summary>
-        /// Assert that ~/ home resolution works
-        /// </summary>
-        [Theory]
-        [InlineData("~/", "/home/user/")]
-        public void HomeTildaTest(string input, string expect)
-        {
-            // Execute
-            var resolved = PathHelper.ResolvePath(input);
-
-            // Assert
-            Assert.Equal(expect, resolved);
-        }
-
-        /// <summary>
-        /// Assert that ~/ home and env var resolution works
-        /// </summary>
-        [Theory]
-        [InlineData("~/$FOO", "/home/user/foo")]
-        [InlineData("~/%FOO%", "/home/user/foo")]
-        public void HomeVariablesTest(string input, string expect)
         {
             // Execute
             var resolved = PathHelper.ResolvePath(input);

@@ -1,4 +1,3 @@
-
 namespace Walrus.Core
 {
     using System;
@@ -21,13 +20,13 @@ namespace Walrus.Core
         {
             ArgumentNullException.ThrowIfNull(path);
 
-            path = ResolveAllEnvironmentVariables(path);
-
-            if(path.StartsWith("~/"))
+            if (path.StartsWith("~/"))
             {
                 var home = Environment.GetEnvironmentVariable("HOME");
                 path = path.Replace("~/", $"{home}{Path.DirectorySeparatorChar}");
             }
+
+            path = ResolveAllEnvironmentVariables(path);
 
             return path;
 
@@ -41,16 +40,16 @@ namespace Walrus.Core
         private static string ResolveAllEnvironmentVariables(string path)
         {
             var resolved = new List<string>(16);
-            foreach(var part in path.Split(Path.DirectorySeparatorChar))
+            foreach (var part in path.Split(Path.DirectorySeparatorChar))
             {
                 string expanded = part;
 
-                if(part.StartsWith('$'))
+                if (part.StartsWith('$'))
                 {
                     var varName = part.Substring(1);
                     expanded = Environment.GetEnvironmentVariable(varName) ?? string.Empty;
                 }
-                else if(part.StartsWith('%'))
+                else if (part.StartsWith('%'))
                 {
                     expanded = Environment.ExpandEnvironmentVariables(part);
                 }
