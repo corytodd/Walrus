@@ -1,5 +1,10 @@
 {
   "DirectoryScanDepth": 3,
   "RepositoryRoots": [],
-  "AuthorAliases": {}
+  "AuthorAliases": {},
+  "runtimeOptions": {
+    "configProperties": {
+        "System.Globalization.Invariant": true
+    }
+  }
 }
