@@ -25,5 +25,11 @@ namespace Walrus.Core
         ///     "some name" : { "email1@example.com", "email2@work.com" }
         /// </summary>
         IDictionary<string, IList<string>>? AuthorAliases { get; set; }
+
+        /// <summary>
+        ///     Validates self or throws WalrusConfigurationException
+        /// </summary>
+        /// <exception cref="WalrusConfigurationException">Thrown if configuration is invalid</exception>
+        public void ValidateOrThrow();
     }
 }
