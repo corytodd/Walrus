@@ -46,7 +46,9 @@
             var commits =
                 QueryRepositories(query)
                     .AsParallel()
-                    .SelectMany(r => r.Commits.Where(preparedQuery.IsMatch));
+                    .SelectMany(r => r.Commits
+                        .Distinct()
+                        .Where(preparedQuery.IsMatch));
 
             // Wrap GroupBy in a CommitGroup so we can have keys of different types
             var grouped = query.GroupBy switch

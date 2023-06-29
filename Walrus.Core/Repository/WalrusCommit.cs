@@ -43,6 +43,28 @@
         public DateTime Timestamp { get; init; }
 
         /// <inheritdoc />
+        public override bool Equals(object? obj)
+        {
+            return Equals(obj as WalrusCommit);
+        }
+
+        /// <summary>
+        ///     Commits with the same sha from the same repo path are equal
+        /// </summary>
+        public bool Equals(WalrusCommit? other)
+        {
+            return other != null &&
+                Sha == other.Sha &&
+                RepoPath == other.RepoPath;
+        }
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Sha, RepoPath);
+        }
+
+        /// <inheritdoc />
         public override string ToString()
         {
             return $"[{RepoName}] {Timestamp} {AuthorEmail} {Sha} {Message}";
