@@ -78,6 +78,17 @@
                         AuthorEmail = "test2@example.com",
                         RepoName = "project_2",
                         RepoPath = "/home/user/code/project_2"
+                    },
+                    // A cherry-pick
+                    new WalrusCommit
+                    {
+                        Branch = "feature",
+                        Message = "[bugfix] really fix issue #2252",
+                        Sha = "0335f9a11ec0c5f83c0f412ed49e816f815d9089",
+                        Timestamp = ConstantDateTimes.Today,
+                        AuthorEmail = "test2@example.com",
+                        RepoName = "project_2",
+                        RepoPath = "/home/user/code/project_2"
                     }
                 })
             };
