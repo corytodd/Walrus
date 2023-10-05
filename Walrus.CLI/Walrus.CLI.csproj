@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <SemVer>0.1.12</SemVer>
+    <SemVer>0.2.0</SemVer>
     <Suffix></Suffix>
   </PropertyGroup>
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <PackAsTool>true</PackAsTool>
     <AssemblyName>corytodd.us.walrusc</AssemblyName>
     <ToolCommandName>walrusc</ToolCommandName>
