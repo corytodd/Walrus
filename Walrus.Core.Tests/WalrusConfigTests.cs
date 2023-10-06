@@ -3,6 +3,7 @@ namespace Walrus.Core.Tests
     using System.Linq;
     using System.Collections.Generic;
     using Xunit;
+    using Newtonsoft.Json;
 
     /// <summary>
     ///     WalrusConfig tests
@@ -48,6 +49,34 @@ namespace Walrus.Core.Tests
 
             // Execute
             Assert.Throws<WalrusConfigurationException>(() => config.ValidateOrThrow());
+        }
+
+        /// <summary>
+        /// Allow existing configurations to work without
+        /// specifying a repo ignore list.
+        /// </summary>
+        [Fact]
+        public void MissingIgnoredRepos()
+        {
+            // Setup
+            var json = """
+            {
+                "DirectoryScanDepth": 3,
+                "RepositoryRoots": [
+                    "H:\\code"
+                ],
+                "AuthorAliases": {
+                    "illyum": [
+                        "illy@home.com",
+                        "illy@work.com"
+                    ]
+                }
+            }
+            """;
+
+            // Execute
+            var config = JsonConvert.DeserializeObject<WalrusConfig>(json);
+            Assert.Empty(config.IgnoredRepos);
         }
     }
 }

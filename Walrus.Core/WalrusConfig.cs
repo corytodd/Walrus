@@ -9,6 +9,9 @@
     /// </summary>
     public sealed class WalrusConfig : IWalrusConfig
     {
+
+        private readonly List<string> _ignoredRepos = new();
+
         /// <summary>
         ///     Generate a default configuration
         /// </summary>
@@ -25,6 +28,20 @@
 
         /// <inheritdoc />
         public IDictionary<string, IList<string>>? AuthorAliases { get; set; }
+
+        /// <inheritdoc />
+        public IList<string> IgnoredRepos
+        {
+            get => _ignoredRepos;
+            set
+            {
+                _ignoredRepos.Clear();
+                foreach(var path in value)
+                {
+                    _ignoredRepos.Add(PathHelper.ResolvePath(path));
+                }
+            }
+        }
 
         /// <inheritdoc />
         public void ValidateOrThrow()

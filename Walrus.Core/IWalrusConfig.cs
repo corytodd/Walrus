@@ -27,6 +27,12 @@ namespace Walrus.Core
         IDictionary<string, IList<string>>? AuthorAliases { get; set; }
 
         /// <summary>
+        ///     List of repository names to ignore
+        ///     This is the full path of the repo to ignore
+        /// </summary>
+        IList<string> IgnoredRepos { get; set; }
+
+        /// <summary>
         ///     Validates self or throws WalrusConfigurationException
         /// </summary>
         /// <exception cref="WalrusConfigurationException">Thrown if configuration is invalid</exception>
