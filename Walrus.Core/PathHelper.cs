@@ -3,6 +3,8 @@ namespace Walrus.Core
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// Path helper utilities
@@ -27,9 +29,40 @@ namespace Walrus.Core
             }
 
             path = ResolveAllEnvironmentVariables(path);
+            path = Normalize(path);
 
             return path;
 
+        }
+
+        internal static string Normalize(string path)
+        {
+            return Path.GetFullPath(path)
+                .Trim()
+                .TrimEnd(Path.DirectorySeparatorChar);
+        }
+
+        /// <summary>
+        /// Returns true if <paramref name="pathList"/> contains <paramref name="repositoryPath"/>.
+        /// All paths are normalized beforce testing.
+        /// </summary>
+        /// <param name="ignoredRepos">List of paths to test against</param>
+        /// <param name="repositoryPath"></param>
+        /// <returns></returns>
+        internal static bool ContainsPath(IList<string> pathList, string repositoryPath)
+        {
+            var found = false;
+            var normalizedTarget = Normalize(repositoryPath);
+            foreach(var ignoredRepo in pathList)
+            {
+                var normalizedIgnore = Normalize(ignoredRepo);
+                found = normalizedTarget == normalizedIgnore;
+                if(found)
+                {
+                    break;
+                }
+            }
+            return found;
         }
 
         /// <summary>

@@ -14,6 +14,7 @@
     {
         private readonly ILogger _logger;
         private readonly IRepositoryProvider _repositoryProvider;
+        private readonly ISet<string> _ignoredPaths;
 
         /// <summary>
         ///     Create a new WalrusService
@@ -31,6 +32,7 @@
             _logger = logger;
             _repositoryProvider = repositoryProvider;
             Config = config;
+            _ignoredPaths = new HashSet<string>(Config.IgnoredRepos);
         }
 
         /// <inheritdoc />
@@ -103,7 +105,7 @@
                 _logger.LogDebug("Searching {Path}", root);
 
                 var repositories = _repositoryProvider
-                    .GetRepositories(root, Config.DirectoryScanDepth, query.AllBranches)
+                    .GetRepositories(root, Config.DirectoryScanDepth, query.AllBranches, ExcludeReposFilter)
                     .Where(query.IsMatch);
 
                 foreach (var repo in repositories)
@@ -112,5 +114,7 @@
                 }
             }
         }
+
+        private bool ExcludeReposFilter(string repoPath) => PathHelper.ContainsPath(Config.IgnoredRepos, repoPath);
     }
 }

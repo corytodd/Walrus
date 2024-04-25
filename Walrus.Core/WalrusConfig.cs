@@ -32,15 +32,8 @@
         /// <inheritdoc />
         public IList<string> IgnoredRepos
         {
-            get => _ignoredRepos;
-            set
-            {
-                _ignoredRepos.Clear();
-                foreach(var path in value)
-                {
-                    _ignoredRepos.Add(PathHelper.ResolvePath(path));
-                }
-            }
+            get => _ignoredRepos.Select(PathHelper.ResolvePath).ToList();
+            set => _ignoredRepos.AddRange(value);
         }
 
         /// <inheritdoc />
