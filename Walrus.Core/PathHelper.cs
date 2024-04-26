@@ -16,8 +16,8 @@ namespace Walrus.Core
         /// Automatically resolve all environmental variables and
         /// the home tilda (~/) in path.
         /// </summary>
-        /// <param name="path">Path to resovle</param>
-        /// <return>Resolved path</return>
+        /// <param name="path">Path to resolve</param>
+        /// <return>Absolute resolved path</return>
         public static string ResolvePath(string path)
         {
             ArgumentNullException.ThrowIfNull(path);
@@ -29,22 +29,13 @@ namespace Walrus.Core
             }
 
             path = ResolveAllEnvironmentVariables(path);
-            path = Normalize(path);
 
             return path;
 
         }
 
-        internal static string Normalize(string path)
-        {
-            return Path.GetFullPath(path)
-                .Trim()
-                .TrimEnd(Path.DirectorySeparatorChar);
-        }
-
         /// <summary>
         /// Returns true if <paramref name="pathList"/> contains <paramref name="repositoryPath"/>.
-        /// All paths are normalized beforce testing.
         /// </summary>
         /// <param name="ignoredRepos">List of paths to test against</param>
         /// <param name="repositoryPath"></param>
@@ -52,13 +43,13 @@ namespace Walrus.Core
         internal static bool ContainsPath(IList<string> pathList, string repositoryPath)
         {
             var found = false;
-            var normalizedTarget = Normalize(repositoryPath);
+            var normalizedPath = Path.GetFullPath(ResolvePath(repositoryPath));
             foreach(var ignoredRepo in pathList)
             {
-                var normalizedIgnore = Normalize(ignoredRepo);
-                found = normalizedTarget == normalizedIgnore;
-                if(found)
+                var normalizedIgnoredRepo = Path.GetFullPath(ResolvePath(ignoredRepo));
+                if (normalizedIgnoredRepo == normalizedPath)
                 {
+                    found = true;
                     break;
                 }
             }

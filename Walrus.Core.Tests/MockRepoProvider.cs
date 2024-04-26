@@ -1,5 +1,6 @@
 ﻿namespace Walrus.Core.Tests
 {
+    using System;
     using System.Collections.Generic;
     using Repository;
 
@@ -92,6 +93,17 @@
                     }
                 })
             };
+        }
+
+        public IEnumerable<WalrusRepository> GetRepositories(string rootDirectory, int scanDepth, bool allBranches, Predicate<string> excludeFilter = null)
+        {
+            foreach(var repo in GetRepositories(rootDirectory, scanDepth, allBranches))
+            {
+                if (!excludeFilter(repo.RepositoryPath))
+                {
+                    yield return repo;
+                }
+            }
         }
     }
 }

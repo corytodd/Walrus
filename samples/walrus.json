@@ -4,9 +4,12 @@
     "H:\\code"
   ],
   "AuthorAliases": {
-	  "illyum": [
-		  "illy@home.com",
-		  "illy@work.com"
-	  ]
-  }
+      "illyum": [
+          "illy@home.com",
+          "illy@work.com"
+      ]
+  },
+  "IgnorePaths": [
+    "H:\\code\\llvm"
+  ]
 }
