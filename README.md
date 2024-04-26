@@ -6,18 +6,26 @@ A multi-repo Git query tool
 
 ## Purpose
 
-I spend a fair amount of time tracking down the what and when of my daily activities. Usually this searching spans many (10+) repositories which means the task is boring and tedious. Walrus 
-tool aims to automate the discovery of git commits based on date, author, and other criteria. 
+I spend a fair amount of time tracking down the what and when of my daily activities. Usually this searching spans many (10+) repositories which means the task is boring and tedious. Walrus
+tool aims to automate the discovery of git commits based on date, author, and other criteria.
 
 ## Goals
 
 We don't want to reinvent libgit2sharp, we just want a simple query interface specific to commit messages. We don't care about diffs, code content, or even the change sets.
-For this reason, Gitbase was found to be entirely overkill even though it is pretty rad. It is a fantastic tool and I do make use of it but managing it is kind of a pain. For this reason, the 
+For this reason, Gitbase was found to be entirely overkill even though it is pretty rad. It is a fantastic tool and I do make use of it but managing it is kind of a pain. For this reason, the
 overarching goal of this project is simplicity with the ability to opt-in to complexity when needed.
 
 ## Getting Started
 
 This utility should be used as a dotnet tool. See `tools/install_as_tool.ps1` for how to build and install Walrus on your system.
+
+```
+# Windows
+.\tools\install_as_tool.ps1
+
+# Not Windows
+bash tools/install_as_tool.ps1
+```
 
 To query multiple roots or query from any location, you will need to setup a simple JSON config file. This can be specified as an env `WALRUS_CONFIG_FILE` or a file
 named `walrus.json` placed in your current working directory. The contents should look something like this is:
@@ -26,14 +34,17 @@ named `walrus.json` placed in your current working directory. The contents shoul
 {
   "DirectoryScanDepth": 3,
   "RepositoryRoots": [
-    "H:\\code",
+    "H:\\code"
   ],
   "AuthorAliases": {
-	  "illyum": [
-		  "illy@home.com",
-		  "illy@work.com"
-	  ]
-  }
+      "illyum": [
+          "illy@home.com",
+          "illy@work.com"
+      ]
+  },
+  "IgnorePaths": [
+    "H:\\code\\llvm"
+  ]
 }
 ```
 
@@ -48,7 +59,7 @@ Show the active configuration
 ```
 walrusc show config
 ```
-  
+
 Print a list of all repositories
 ```
 walrusc show repos
@@ -58,12 +69,12 @@ Use the default scan depth and search for repositories relative to your current 
 ```
 walrusc query --current-directory
 ```
-  
+
 Count commits between March 2 and Jun 2 of 2021. This includes all authors on the currently checked out branch in each repository
 ```
 walrusc query --after "Mar 2 2021" --before "Jun 2 2021"
 ```
-  
+
 
 Show all commits on all branches since last week (default if --after is not specified) and restrict to a single author
 ```
@@ -122,8 +133,7 @@ walrusc query --author-alias illyum
 
 - [x] Basic date/author query interface
 - [x] Unit tests
-- [x] Simple CLI 
+- [x] Simple CLI
 - [x] Table style CLI output
 - [x] Create dotnet tool
-- [x] CI tests  
-- [ ] Calendar style GUI 
+- [x] CI tests

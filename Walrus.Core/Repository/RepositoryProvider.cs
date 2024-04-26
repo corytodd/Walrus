@@ -13,10 +13,13 @@
     public class RepositoryProvider : IRepositoryProvider
     {
         /// <inheritdoc />
-        public IEnumerable<WalrusRepository> GetRepositories(string rootDirectory, int scanDepth, bool allBranches)
+        public IEnumerable<WalrusRepository> GetRepositories(string rootDirectory, int scanDepth, bool allBranches, Predicate<string>? excludeFilter =null)
         {
             Ensure.IsValid(nameof(rootDirectory), !string.IsNullOrEmpty(rootDirectory));
             Ensure.IsValid(nameof(scanDepth), scanDepth >= 0);
+
+            // Accept everything by default
+            excludeFilter ??= (string s) => false;
 
             var directories = Utilities.EnumerateGitDirectoriesToDepth(rootDirectory, scanDepth);
 
@@ -30,6 +33,11 @@
 
                 // If neither the path or the working directory are set
                 Ensure.IsValid(nameof(repoPath), !string.IsNullOrEmpty(repoPath), "Expected a valid repo path to be set. This is a bug.");
+
+                if (excludeFilter(repoPath))
+                {
+                    continue;
+                }
 
                 var commits = GetCommits(repo, allBranches);
 

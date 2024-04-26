@@ -3,6 +3,8 @@ namespace Walrus.Core
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// Path helper utilities
@@ -14,8 +16,8 @@ namespace Walrus.Core
         /// Automatically resolve all environmental variables and
         /// the home tilda (~/) in path.
         /// </summary>
-        /// <param name="path">Path to resovle</param>
-        /// <return>Resolved path</return>
+        /// <param name="path">Path to resolve</param>
+        /// <return>Absolute resolved path</return>
         public static string ResolvePath(string path)
         {
             ArgumentNullException.ThrowIfNull(path);
@@ -27,9 +29,33 @@ namespace Walrus.Core
             }
 
             path = ResolveAllEnvironmentVariables(path);
+            path = path.TrimEnd(Path.DirectorySeparatorChar);
 
             return path;
 
+        }
+
+        /// <summary>
+        /// Returns true if <paramref name="pathList"/> contains <paramref name="repositoryPath"/>.
+        /// </summary>
+        /// <param name="ignoredRepos">List of paths to test against</param>
+        /// <param name="repositoryPath"></param>
+        /// <returns></returns>
+        internal static bool ContainsPath(IList<string> pathList, string repositoryPath)
+        {
+            var found = false;
+            var normalizedPath = Path.GetFullPath(ResolvePath(repositoryPath));
+            foreach(var ignoredRepo in pathList)
+            {
+                var normalizedIgnoredRepo = Path.GetFullPath(ResolvePath(ignoredRepo));
+                if (normalizedIgnoredRepo == normalizedPath)
+                {
+                    WalrusLog.Logger.LogDebug("Ignoring repository {RepositoryPath}", repositoryPath);
+                    found = true;
+                    break;
+                }
+            }
+            return found;
         }
 
         /// <summary>
