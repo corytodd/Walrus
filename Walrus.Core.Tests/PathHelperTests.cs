@@ -23,7 +23,7 @@ namespace Walrus.Core.Tests
                     yield return new object[] { "relative", "relative" };
                     yield return new object[] { @"relative\path\to\boot", @"relative\path\to\boot" };
                     yield return new object[] { @"relative\path\to\..\boot", @"relative\path\to\..\boot" };
-                    yield return new object[] { @"~/", @"C:\Users\user\" };
+                    yield return new object[] { @"~/", @"C:\Users\user" };
                     yield return new object[] { @"~/%FOO%", @"C:\Users\user\foo" };
                 }
                 else
@@ -32,7 +32,7 @@ namespace Walrus.Core.Tests
                     yield return new object[] { "relative", "relative" };
                     yield return new object[] { "relative/path/to/boot", "relative/path/to/boot" };
                     yield return new object[] { "relative/path/to/../boot", "relative/path/to/../boot" };
-                    yield return new object[] { "~/", "/home/user/" };
+                    yield return new object[] { "~/", "/home/user" };
                     yield return new object[] { "~/$FOO", "/home/user/foo" };
                 }
             }

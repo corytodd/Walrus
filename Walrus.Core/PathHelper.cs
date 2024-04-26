@@ -29,6 +29,7 @@ namespace Walrus.Core
             }
 
             path = ResolveAllEnvironmentVariables(path);
+            path = path.TrimEnd(Path.DirectorySeparatorChar);
 
             return path;
 
@@ -49,6 +50,7 @@ namespace Walrus.Core
                 var normalizedIgnoredRepo = Path.GetFullPath(ResolvePath(ignoredRepo));
                 if (normalizedIgnoredRepo == normalizedPath)
                 {
+                    WalrusLog.Logger.LogDebug("Ignoring repository {RepositoryPath}", repositoryPath);
                     found = true;
                     break;
                 }
